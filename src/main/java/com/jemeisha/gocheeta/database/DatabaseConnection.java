@@ -21,7 +21,7 @@ public class DatabaseConnection implements ServletContextListener {
             Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement statement= conn.createStatement();
-
+             //test
             ResultSet resultSet= statement.executeQuery("SELECT * FROM branch");
 
             resultSet.next();
