@@ -1,17 +1,27 @@
 package com.jemeisha.gocheeta.pojo;
 
 public class Customer {
-    private int cusId;
+    private String username;
+    private String password;
     private String cusFistName;
     private String cusLastName;
     private String cusMobNo;
 
-    public int getCusId() {
-        return cusId;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setCusId(int cusId) {
-        this.cusId = cusId;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCusFistName() {
