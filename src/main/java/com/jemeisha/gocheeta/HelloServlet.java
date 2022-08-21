@@ -16,7 +16,7 @@ public class HelloServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
        DBUtil db=new DBUtil();
-       db.createCustomer("kithu","123","Kithumini","Almeida","0765625193");
+       db.createCustomer("kithu","kithu123","Kithumini","Almeida","0765625193");
 
 
 
