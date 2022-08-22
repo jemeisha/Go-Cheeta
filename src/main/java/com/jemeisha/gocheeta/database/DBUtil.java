@@ -2,6 +2,7 @@ package com.jemeisha.gocheeta.database;
 
 import com.jemeisha.gocheeta.pojo.Branch;
 import com.jemeisha.gocheeta.pojo.Customer;
+import com.jemeisha.gocheeta.pojo.Driver;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -84,7 +85,9 @@ public class DBUtil {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM customer");
             while (resultSet.next()) {
                 Customer customer = new Customer();
-                //TODO
+
+                customer.setCusFistName(resultSet.getString("username"));
+                customer.setCusLastName(resultSet.getString("password"));
                 customer.setCusFistName(resultSet.getString("first_name"));
                 customer.setCusLastName(resultSet.getString("last_name"));
                 customer.setCusMobNo(resultSet.getString("mobile_no"));
@@ -96,10 +99,10 @@ public class DBUtil {
         return customerList;
     }
 
-    public List<Branch> getStudents() {
-        List<Branch> branches = new ArrayList<>();
+    public ArrayList<Branch> getStudents() {
+        ArrayList<Branch> branchList = new ArrayList<>();
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(CLASS_NAME);
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement statement = conn.createStatement();
 
@@ -109,22 +112,62 @@ public class DBUtil {
                 branch.setBranchId(resultSet.getInt("branch_id"));
                 branch.setBranchName(resultSet.getString("branch_name"));
                 branch.setPhoneNo(resultSet.getString("phoneNo"));
-                branches.add(branch);
+                branchList.add(branch);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-        return branches;
+        return branchList;
     }
+    public Driver getDriverById(int driverId) {
 
+        Driver driver = new Driver();
+        boolean driverFound = false;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `driver` WHERE driver_id=?");
+            ps.setInt(1, driverId);
+            ResultSet rs = ps.executeQuery();
+
+            driverFound = rs.next();
+            if (driverFound) {
+                driver.setDriverId(rs.getInt("driver_id"));
+                driver.setDriverFirstName(rs.getString("first_name"));
+                driver.setDriverLastName(rs.getString("last_name"));
+                driver.setDriverNic(rs.getString("NIC"));
+                driver.setDriverMobile(rs.getString("mobile"));
+                //branch id here and in Driver class
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        if (driverFound) {
+            return driver;
+        } else {
+            return null;
+
+        }
+
+
+
+
+
+
+
+
+
+    }
     //getCustomerByUsername
     //createCustomer
     //getAllCustomers
 
     //getAllBranches
     //getBranchById
-
+//--------------TODO
     //getDistance
+//------------------------
 
     //getDriverById
     //getAllDrivers
