@@ -3,6 +3,7 @@ package com.jemeisha.gocheeta.database;
 import com.jemeisha.gocheeta.pojo.Branch;
 import com.jemeisha.gocheeta.pojo.Customer;
 import com.jemeisha.gocheeta.pojo.Driver;
+import com.jemeisha.gocheeta.pojo.Vehicle;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -150,15 +151,90 @@ public class DBUtil {
 
         }
 
+    }
 
+    public ArrayList<Driver> getAllDrivers() {
+        ArrayList<Driver> driverList = new ArrayList<>();
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement statement = conn.createStatement();
 
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM driver");
+            while (resultSet.next()) {
+                Driver driver = new Driver();
 
+                driver.setDriverId(resultSet.getInt("driver_id"));
+                driver.setDriverFirstName(resultSet.getString("first_name"));
+                driver.setDriverLastName(resultSet.getString("last_name"));
+                driver.setDriverNic(resultSet.getString("NIC"));
+                driver.setDriverMobile(resultSet.getString("mobile"));
+                //driver branch id
+                driverList.add(driver);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return driverList;
+    }
 
+    public Vehicle getVehicleById(String vehicleId) {
 
+        Vehicle vehicle = new Vehicle();
+        boolean vehicleFound = false;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `vehicle` WHERE vehicle_no=?");
+            ps.setString(1, vehicleId);
+            ResultSet rs = ps.executeQuery();
 
+            vehicleFound = rs.next();
+            if (vehicleFound) {
+                vehicle.setVehicleNo(rs.getString("vehicle_no"));
+                //vehicle.setDriverId(rs.getString("driver_id"));
+                vehicle.setVehicleType(rs.getString("vehicle_type"));
+                vehicle.setNoOfSeats(rs.getInt("noOfSeats"));
+                vehicle.setVehicleColour(rs.getString("colour"));
 
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        if (vehicleFound) {
+            return vehicle;
+        } else {
+            return null;
+
+        }
 
     }
+
+    public ArrayList<Vehicle> getAllVehicles() {
+        ArrayList<Vehicle> vehicleList = new ArrayList<>();
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement statement = conn.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM vehicle");
+            while (resultSet.next()) {
+                Vehicle vehicle = new Vehicle();
+
+                vehicle.setVehicleNo(resultSet.getString("vehicle_no"));
+                //vehicle.setDriverId(resultSet.getInt("driver_id"));
+                vehicle.setVehicleType(resultSet.getString("vehicle_type"));
+                vehicle.setNoOfSeats(resultSet.getInt("noOfSeats"));
+                vehicle.setVehicleColour(resultSet.getString("colour"));
+                vehicleList.add(vehicle);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return vehicleList;
+    }
+
     //getCustomerByUsername
     //createCustomer
     //getAllCustomers
@@ -171,9 +247,9 @@ public class DBUtil {
 
     //getDriverById
     //getAllDrivers
-    //changeDriverStatus
-    //assignDriverToOrder
-    //getAvailableDrivers
+    //changeDriverStatus------
+    //assignDriverToOrder--------
+    //getAvailableDrivers--------
 
     //getVehicleById
     //getAllVehicles
