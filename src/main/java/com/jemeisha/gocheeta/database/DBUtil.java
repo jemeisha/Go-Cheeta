@@ -120,6 +120,7 @@ public class DBUtil {
         }
         return branchList;
     }
+
     public Driver getDriverById(int driverId) {
 
         Driver driver = new Driver();
@@ -235,6 +236,36 @@ public class DBUtil {
         return vehicleList;
     }
 
+
+    public boolean createVehicle(
+            String vehicleNo,
+//          String driverId,
+            String vehicleType,
+            int noOfSeats,
+            String vehicleColour
+
+    ) {
+        int rowsAffected = 0;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO `vehicle` VALUES (?,?,?,?,?)");
+
+            ps.setString(1, vehicleNo);
+            //ps.setString(2, driverId);
+            ps.setString(3, vehicleType);
+            ps.setInt(4, noOfSeats);
+            ps.setString(5, vehicleColour);
+            rowsAffected = ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return rowsAffected > 0;
+
+
+    }
+
+
     //getCustomerByUsername
     //createCustomer
     //getAllCustomers
@@ -254,9 +285,9 @@ public class DBUtil {
     //getVehicleById
     //getAllVehicles
     //createVehicle
-    //updateVehicleById
+    //updateVehicleById-------------
 
     //createOrder
-    //updateOrderStatusById
-    //cancelOrder
+    //updateOrderStatusById-----------------
+    //cancelOrder-----------------------
 }
