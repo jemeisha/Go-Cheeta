@@ -15,6 +15,16 @@ public class DBUtil {
     static final String PASS = "example";
     static final String CLASS_NAME = "com.mysql.cj.jdbc.Driver";
 
+    private static DBUtil SINGLETON_INSTANCE= new DBUtil();
+    private DBUtil(){
+
+    }
+
+    public static DBUtil getSingletonInstance(){
+
+        return SINGLETON_INSTANCE;
+    }
+
 
     /*Customer Functions-------------------*/
 
@@ -179,6 +189,33 @@ public class DBUtil {
         return driverList;
     }
 
+    public ArrayList<Driver> getAvailableDrivers(int branchId){
+        ArrayList<Driver> driverList = new ArrayList<>();
+        int rowsAffected = 0;
+        try {
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM driver WHERE branch_id=? AND driver_id NOT IN (SELECT driver_id FROM `order` WHERE booking_state <=? )");
+            ps.setInt(1, branchId);
+            ps.setInt(2, 2);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Driver driver = new Driver();
+
+                driver.setDriverId(resultSet.getInt("driver_id"));
+                driver.setDriverFirstName(resultSet.getString("first_name"));
+                driver.setDriverLastName(resultSet.getString("last_name"));
+                driver.setDriverNic(resultSet.getString("NIC"));
+                driver.setDriverMobile(resultSet.getString("mobile"));
+                //driver branch id
+                driverList.add(driver);
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+        return driverList;
+
+    }
     public Vehicle getVehicleById(String vehicleId) {
 
         Vehicle vehicle = new Vehicle();
@@ -278,8 +315,8 @@ public class DBUtil {
 
     //getDriverById
     //getAllDrivers
-    //changeDriverStatus------
-    //assignDriverToOrder--------
+    //changeDriverStatus------XX
+    //assignDriverToOrder--------XX
     //getAvailableDrivers--------
 
     //getVehicleById

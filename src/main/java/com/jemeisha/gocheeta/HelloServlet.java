@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import com.jemeisha.gocheeta.pojo.Customer;
+import com.jemeisha.gocheeta.pojo.Driver;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -18,12 +19,15 @@ public class HelloServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       DBUtil db=new DBUtil();
+       DBUtil db= DBUtil.getSingletonInstance();
        //db.createCustomer("kithu","kithu123","Kithumini","Almeida","0765625193");
 //        Customer customer= db.getCustomerByUsername("kithu");
 //        System.out.println("username_ "+customer.getUsername());
-        ArrayList<Customer> customerList =db.getAllCustomers();
-        System.out.println("Length: "+customerList.size());
+//        ArrayList<Customer> customerList =db.getAllCustomers();
+//        System.out.println("Length: "+customerList.size());
+
+        ArrayList<Driver> driverList =db.getAvailableDrivers(1);
+        System.out.println("Length: "+driverList.size());
 
         response.setContentType("text/html");
 

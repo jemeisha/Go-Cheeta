@@ -6,14 +6,14 @@ CREATE TABLE `customer`
     `last_name`  varchar(45) DEFAULT NULL,
     `mobile_no`  varchar(10) NOT NULL,
     PRIMARY KEY (`username`)
-)
+);
 CREATE TABLE `branch`
 (
     `branch_id`   int         NOT NULL,
     `branch_name` varchar(45) NOT NULL,
     `phoneNo`     varchar(10) NOT NULL,
     PRIMARY KEY (`branch_id`)
-)
+);
 CREATE TABLE `driver`
 (
     `driver_id`  int         NOT NULL,
@@ -22,10 +22,11 @@ CREATE TABLE `driver`
     `NIC`        varchar(12) NOT NULL,
     `mobile`     varchar(10) NOT NULL,
     `branch_id`  int         NOT NULL,
+
     PRIMARY KEY (`driver_id`),
     KEY          `branch_id_idx` (`branch_id`),
     CONSTRAINT `branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`branch_id`)
-)
+);
 CREATE TABLE `vehicle`
 (
     `vehicle_no`   varchar(45) NOT NULL,
@@ -36,21 +37,28 @@ CREATE TABLE `vehicle`
     PRIMARY KEY (`vehicle_no`),
     KEY            `vehi_driver_idx` (`driver_id`),
     CONSTRAINT `vehi_driver` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-)
+);
 
 CREATE TABLE `order`
 (
     `order_id`      int         NOT NULL,
-    `customer_id`   int         NOT NULL,
+    `username`   varchar(45) NOT NULL,
     `vehicle_no`    varchar(45) NOT NULL,
+    `driver_id`    int NOT NULL,
     `pickup`        varchar(45) NOT NULL,
     `destination`   varchar(45) NOT NULL,
     `total`         int         NOT NULL,
-    `booking state` varchar(20) NOT NULL,
+    `booking_state` int NOT NULL,
+    -- 0 DRIVER_ARRIVING
+    -- 1 DRIVER_ARRIVED
+    -- 2 TRIP_STARTED
+    -- 3 TRIP_ENDED
     PRIMARY KEY (`order_id`),
-    KEY             `order_cus_idx` (`customer_id`),
-    CONSTRAINT `order_cus` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) //------------Insert statement------------------------
+    CONSTRAINT `order_cus` FOREIGN KEY (`username`) REFERENCES `customer` (`username`),
+    CONSTRAINT `order_driver` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`));
+    
+    
+    -- ------------Insert statement------------------------
 
 INSERT INTO `branch` (`branch_id`,`branch_name`,`phoneNo`) VALUES (1,'Nugegoda','0112454599');
 INSERT INTO `branch` (`branch_id`, `branch_name`, `phoneNo`)
@@ -99,3 +107,4 @@ INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colo
 INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colour`) VALUES ('PK7256',7,'van',5,'White');
 
 
+-- SELECT * FROM go_cheeta.driver WHERE branch_id=1 AND driver_id NOT IN (SELECT driver_id FROM `order` WHERE booking_state <=2 );
