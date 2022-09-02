@@ -1,6 +1,7 @@
 package com.jemeisha.gocheeta;
 
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import com.jemeisha.gocheeta.pojo.Customer;
@@ -26,9 +27,24 @@ public class HelloServlet extends HttpServlet {
 //        ArrayList<Customer> customerList =db.getAllCustomers();
 //        System.out.println("Length: "+customerList.size());
 
-        ArrayList<Driver> driverList =db.getAvailableDrivers(1);
-        System.out.println("Length: "+driverList.size());
+//        ArrayList<Driver> driverList =db.getAvailableDrivers(1);
+//        System.out.println("Length: "+driverList.size());
 
+//        try {
+//            Logic.register("testUsername","testPassword","testFNAme","testLName","0762345183");
+//        } catch (NoSuchAlgorithmException e) {
+//          throw new RuntimeException(e);
+//            System.out.println(e);
+//        }
+
+        try {
+            String token= Logic.login("testUsernam","testPassword");
+            System.out.println("token "+ token);
+
+        } catch (NoSuchAlgorithmException e) {
+//            throw new RuntimeException(e);
+            System.out.println(e);
+        }
         response.setContentType("text/html");
 
         // Hello

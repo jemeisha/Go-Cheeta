@@ -57,7 +57,18 @@ CREATE TABLE `order`
     CONSTRAINT `order_cus` FOREIGN KEY (`username`) REFERENCES `customer` (`username`),
     CONSTRAINT `order_driver` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`));
     
-    
+   
+   CREATE TABLE `distance`
+   (
+   `distance_one` int NOT NULL,
+   `distance_two` int NOT NULL,
+   `distance` double NOT NULL,
+   
+PRIMARY KEY (`distance_one`,`distance_two`),
+CONSTRAINT `distanceonebranch` FOREIGN KEY (`distance_one`) REFERENCES `branch` (`branch_id`),
+CONSTRAINT `distancetwobranch` FOREIGN KEY (`distance_two`) REFERENCES `branch` (`branch_id`));
+
+   
     -- ------------Insert statement------------------------
 
 INSERT INTO `branch` (`branch_id`,`branch_name`,`phoneNo`) VALUES (1,'Nugegoda','0112454599');
