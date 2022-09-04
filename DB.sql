@@ -45,8 +45,8 @@ CREATE TABLE `order`
     `username`   varchar(45) NOT NULL,
     `vehicle_no`    varchar(45) NOT NULL,
     `driver_id`    int NOT NULL,
-    `pickup`        varchar(45) NOT NULL,
-    `destination`   varchar(45) NOT NULL,
+    `pickup`        int NOT NULL,
+    `destination`   int NOT NULL,
     `total`         int         NOT NULL,
     `booking_state` int NOT NULL,
     -- 0 DRIVER_ARRIVING
@@ -55,6 +55,8 @@ CREATE TABLE `order`
     -- 3 TRIP_ENDED
     PRIMARY KEY (`order_id`),
     CONSTRAINT `order_cus` FOREIGN KEY (`username`) REFERENCES `customer` (`username`),
+    CONSTRAINT `branch_pickup` FOREIGN KEY (`pickup`) REFERENCES `branch` (`branch_id`),
+    CONSTRAINT `branch_destination` FOREIGN KEY (`destination`) REFERENCES `branch` (`branch_id`),
     CONSTRAINT `order_driver` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`));
     
    

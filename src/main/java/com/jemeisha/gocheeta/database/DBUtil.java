@@ -1,9 +1,7 @@
 package com.jemeisha.gocheeta.database;
 
-import com.jemeisha.gocheeta.pojo.Branch;
-import com.jemeisha.gocheeta.pojo.Customer;
+import com.jemeisha.gocheeta.pojo.*;
 import com.jemeisha.gocheeta.pojo.Driver;
-import com.jemeisha.gocheeta.pojo.Vehicle;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -230,7 +228,7 @@ public class DBUtil {
             vehicleFound = rs.next();
             if (vehicleFound) {
                 vehicle.setVehicleNo(rs.getString("vehicle_no"));
-                //vehicle.setDriverId(rs.getString("driver_id"));
+                vehicle.setDriverId(rs.getInt("driver_id"));
                 vehicle.setVehicleType(rs.getString("vehicle_type"));
                 vehicle.setNoOfSeats(rs.getInt("noOfSeats"));
                 vehicle.setVehicleColour(rs.getString("colour"));
@@ -302,7 +300,107 @@ public class DBUtil {
 
     }
 
+    public Vehicle getVehicleByDriverId(int driverId) {
 
+        Vehicle vehicle = new Vehicle();
+        boolean vehicleFound = false;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `vehicle` WHERE driver_id=?");
+            ps.setInt(1, driverId);
+            ResultSet rs = ps.executeQuery();
+
+            vehicleFound = rs.next();
+            if (vehicleFound) {
+                vehicle.setVehicleNo(rs.getString("vehicle_no"));
+                vehicle.setDriverId(rs.getInt("driver_id"));
+                vehicle.setVehicleType(rs.getString("vehicle_type"));
+                vehicle.setNoOfSeats(rs.getInt("noOfSeats"));
+                vehicle.setVehicleColour(rs.getString("colour"));
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        if (vehicleFound) {
+            return vehicle;
+        } else {
+            return null;
+        }
+    }
+    public ArrayList<Order> getOrdersByUsername(String username,boolean ongoing){
+        ArrayList<Order> orderList = new ArrayList<>();
+        int rowsAffected = 0;
+        try {
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `order` WHERE username=? AND booking_state<=?");
+            ps.setString(1, username);
+            ps.setInt(2, ongoing?2:3);//ternary operator
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Order order = new Order();
+
+                order.setOrderID(resultSet.getInt("order_id"));
+                order.setUsername(resultSet.getString("username"));
+                order.setVehicleNo(resultSet.getString("vehicle_no"));
+                order.setDriverID(resultSet.getInt("driver_id"));
+                order.setPickup(resultSet.getInt("pickup"));
+                order.setDestination(resultSet.getInt("destination"));
+                order.setTotal(resultSet.getInt("total"));
+                order.setBookingState(resultSet.getInt("booking_state"));
+
+                orderList.add(order);
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+        return orderList;
+
+    }
+
+    public int createOrder(
+            String username,
+            String vehicleNo,
+            int driverID,
+            int pickup,
+            int destination,
+            int total,
+            int bookingState
+
+
+    ) throws SQLException, ClassNotFoundException {
+        int rowsAffected = 0;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO `order`(`username`,`vehicle_no`,`driver_id`,`pickup`,`destination`,`total`,`booking_state`) VALUES (?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, username);
+            ps.setString(2, vehicleNo);
+            ps.setInt(3, driverID);
+            ps.setInt(4, pickup);
+            ps.setInt(5, destination);
+            ps.setInt(6, total);
+            ps.setInt(7, bookingState);
+
+            rowsAffected = ps.executeUpdate();
+             //get the auto generated id
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return (generatedKeys.getInt(1));
+                }
+                else {
+                    throw new SQLException("Creating order failed, no ID obtained.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
     //getCustomerByUsername
     //createCustomer
     //getAllCustomers
@@ -323,8 +421,10 @@ public class DBUtil {
     //getAllVehicles
     //createVehicle
     //updateVehicleById-------------
+    //getVehicleByDriverId
 
-    //createOrder
+    //createOrder-------------
     //updateOrderStatusById-----------------
     //cancelOrder-----------------------
+    //getOrdersByUsername---------------
 }

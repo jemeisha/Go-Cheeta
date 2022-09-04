@@ -2,6 +2,7 @@ package com.jemeisha.gocheeta;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.jemeisha.gocheeta.pojo.Customer;
@@ -37,13 +38,32 @@ public class HelloServlet extends HttpServlet {
 //            System.out.println(e);
 //        }
 
-        try {
-            String token= Logic.login("testUsernam","testPassword");
-            System.out.println("token "+ token);
+//        try {
+//            String token= Logic.login("testUsernam","testPassword");
+//            System.out.println("token "+ token);
+//
+//        } catch (NoSuchAlgorithmException e) {
+////            throw new RuntimeException(e);
+//            System.out.println(e);
+//        }
 
-        } catch (NoSuchAlgorithmException e) {
-//            throw new RuntimeException(e);
-            System.out.println(e);
+//        try {
+//            int orderID= db.createOrder("helen","CAS3922",1,1,3,1000,1);
+//            System.out.println("order id"+ orderID);
+//        }catch (Exception e){
+//            System.out.println(e);
+//
+//        }
+
+        try {
+            Logic.bookARide("helen",1,3);
+            //System.out.println("token "+ token);
+
+        }
+        catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
         response.setContentType("text/html");
 
