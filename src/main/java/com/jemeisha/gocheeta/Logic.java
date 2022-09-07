@@ -53,6 +53,40 @@ public class Logic {
         }
     }
 
+    public static String loginDriver(int driverId, String password) throws NoSuchAlgorithmException {
+
+        DBUtil db = DBUtil.getSingletonInstance();
+        Driver driver = db.getDriverById(driverId);
+
+        if (driver != null) {
+            String newPassword = Util.hashMD5(password);
+            if (newPassword.equals(driver.getPassword())) {
+
+                return "JWT";
+            } else {
+                return null;
+            }
+        } else {
+
+            return null;
+
+        }
+    }
+
+    public static String loginAdmin(String username, String password) {
+
+        final String ADMIN_USERNAME = "admin";
+        final String ADMIN_PASSWORD = "pass";
+
+        if (ADMIN_USERNAME.equals(username)&&ADMIN_PASSWORD.equals(password) ) {
+
+            return "JWT";
+        } else {
+            return null;
+        }
+
+    }
+
     public static Order bookARide(String username, int startingLocation, int endingLocation) throws SQLException, ClassNotFoundException, OrderAlreadyExist, NoDriversAvailable, DistanceNotFound {
 
         DBUtil db = DBUtil.getSingletonInstance();
@@ -64,11 +98,11 @@ public class Logic {
         } else {
             ArrayList<Driver> availableDrivers = db.getAvailableDrivers(startingLocation);
             if (availableDrivers.size() > 0) {
-                double distance= db.getDistance(startingLocation,endingLocation);
-                if(distance<0){
+                double distance = db.getDistance(startingLocation, endingLocation);
+                if (distance < 0) {
                     throw new DistanceNotFound();
                 }
-                double total= Util.calculatePrice(distance);
+                double total = Util.calculatePrice(distance);
                 Driver driver = availableDrivers.get(0);
                 String vehicleNo = db.getVehicleByDriverId(driver.getDriverId()).getVehicleNo();
                 int orderID = db.createOrder(username, vehicleNo, driver.getDriverId(), startingLocation, endingLocation, total, 0);
@@ -92,21 +126,22 @@ public class Logic {
         }
 
 
-}
-   public static boolean changeOrderStatus(int orderId,int state) throws SQLException, ClassNotFoundException, OrderCannotBeFound {
+    }
+
+    public static boolean changeOrderStatus(int orderId, int state) throws SQLException, ClassNotFoundException, OrderCannotBeFound {
         DBUtil db = DBUtil.getSingletonInstance();
-        Order order= db.getOrderByOrderId(orderId);
+        Order order = db.getOrderByOrderId(orderId);
 
-        if(order!=null){
-            return db.updateOrderStatusById(orderId,state);
+        if (order != null) {
+            return db.updateOrderStatusById(orderId, state);
 
-        }else{
+        } else {
             //order does not exist.Throw error
             throw new OrderCannotBeFound();
 
         }
 
 
-   }
+    }
 
 }

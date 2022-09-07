@@ -1,3 +1,7 @@
+DROP DATABASE go_cheeta;
+CREATE DATABASE IF NOT EXISTS go_cheeta;
+USE go_cheeta;
+
 CREATE TABLE `customer`
 (
     `username`   varchar(45) NOT NULL,
@@ -14,9 +18,20 @@ CREATE TABLE `branch`
     `phoneNo`     varchar(10) NOT NULL,
     PRIMARY KEY (`branch_id`)
 );
+
+CREATE TABLE `category`
+(
+    `category_id`   int         NOT NULL AUTO_INCREMENT,
+    `name` varchar(45) NOT NULL,
+    PRIMARY KEY (`category_id`)
+    
+    
+);
+
 CREATE TABLE `driver`
 (
     `driver_id`  int         NOT NULL,
+    `password`   varchar(45) NOT NULL,
     `first_name` varchar(45) NOT NULL,
     `last_name`  varchar(45) DEFAULT NULL,
     `NIC`        varchar(12) NOT NULL,
@@ -31,12 +46,13 @@ CREATE TABLE `vehicle`
 (
     `vehicle_no`   varchar(45) NOT NULL,
     `driver_id`    int         NOT NULL,
-    `vehicle_type` varchar(45) NOT NULL,
+    `vehicle_category` int NOT NULL,
     `noOfSeats`    int DEFAULT NULL,
     `colour`       varchar(45) NOT NULL,
     PRIMARY KEY (`vehicle_no`),
     KEY            `vehi_driver_idx` (`driver_id`),
-    CONSTRAINT `vehi_driver` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT `vehi_driver` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+    CONSTRAINT `vehicle_category` FOREIGN KEY (`vehicle_category`) REFERENCES `category` (`category_id`)
 );
 CREATE TABLE `order`
 (
@@ -102,22 +118,26 @@ INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `mobi
 VALUES ('hirusha', 'hirusha123', 'Hirusha', 'Thishan', '0777567234');
 
 
-INSERT INTO `driver` (`driver_id`,`first_name`,`last_name`,`NIC`,`mobile`,`branch_id`) VALUES (1,'Thilak','Perera','645078526V','0764567123',1);
-INSERT INTO `driver` (`driver_id`,`first_name`,`last_name`,`NIC`,`mobile`,`branch_id`) VALUES (2,'Jagath','Fernando','724010586V','0757033546',1);
-INSERT INTO `driver` (`driver_id`,`first_name`,`last_name`,`NIC`,`mobile`,`branch_id`) VALUES (3,'Nevil','Almeida','683010488V','0727834567',1);
-INSERT INTO `driver` (`driver_id`,`first_name`,`last_name`,`NIC`,`mobile`,`branch_id`) VALUES (4,'Harry','Silva','703820333V','0777876702',2);
-INSERT INTO `driver` (`driver_id`,`first_name`,`last_name`,`NIC`,`mobile`,`branch_id`) VALUES (5,'Vimal','De Silva','759030543V','0719080633',4);
-INSERT INTO `driver` (`driver_id`,`first_name`,`last_name`,`NIC`,`mobile`,`branch_id`) VALUES (6,'Suneth','Perera','804022865V','0765566234',3);
-INSERT INTO `driver` (`driver_id`,`first_name`,`last_name`,`NIC`,`mobile`,`branch_id`) VALUES (7,'Kamal','Fernando','852055234V','0756070890',3);
+INSERT INTO `driver`  VALUES (1,'2f7b52aacfbf6f44e13d27656ecb1f59','Thilak','Perera','645078526V','0764567123',1);
+INSERT INTO `driver`  VALUES (2,'2f7b52aacfbf6f44e13d27656ecb1f59','Jagath','Fernando','724010586V','0757033546',1);
+INSERT INTO `driver`  VALUES (3,'2f7b52aacfbf6f44e13d27656ecb1f59','Nevil','Almeida','683010488V','0727834567',1);
+INSERT INTO `driver`  VALUES (4,'2f7b52aacfbf6f44e13d27656ecb1f59','Harry','Silva','703820333V','0777876702',2);
+INSERT INTO `driver`  VALUES (5,'2f7b52aacfbf6f44e13d27656ecb1f59','Vimal','De Silva','759030543V','0719080633',4);
+INSERT INTO `driver`  VALUES (6,'2f7b52aacfbf6f44e13d27656ecb1f59','Suneth','Perera','804022865V','0765566234',3);
+INSERT INTO `driver`  VALUES (7,'2f7b52aacfbf6f44e13d27656ecb1f59','Kamal','Fernando','852055234V','0756070890',3);
 
 
-INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colour`) VALUES ('2524847',4,'Van',8,'White');
-INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colour`) VALUES ('AAB6032',1,'Car',3,'Red');
-INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colour`) VALUES ('BAA3357',5,'Car',3,'Black');
-INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colour`) VALUES ('BBC5678',6,'Car',3,'Black');
-INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colour`) VALUES ('CAP7880',3,'Car',3,'Purple');
-INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colour`) VALUES ('CAS3922',2,'Car',3,'Blue');
-INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_type`,`noOfSeats`,`colour`) VALUES ('PK7256',7,'van',5,'White');
+INSERT INTO `category`  VALUES (1,'Car');
+INSERT INTO `category`  VALUES (2,'Tuk');
+INSERT INTO `category`  VALUES (3,'Van');
+
+INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`colour`) VALUES ('2524847',4,3,8,'White');
+INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`colour`) VALUES ('AAB6032',1,1,3,'Red');
+INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`colour`) VALUES ('BAA3357',5,1,3,'Black');
+INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`colour`) VALUES ('BBC5678',6,1,3,'Black');
+INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`colour`) VALUES ('CAP7880',3,1,3,'Purple');
+INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`colour`) VALUES ('CAS3922',2,1,3,'Blue');
+INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`colour`) VALUES ('PK7256',7,3,5,'White');
 
 
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('1', '1', '0.0');

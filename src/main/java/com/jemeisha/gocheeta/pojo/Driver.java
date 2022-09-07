@@ -3,10 +3,20 @@ package com.jemeisha.gocheeta.pojo;
 public class Driver {
 
     private int driverId;
+
+    private String password;
     private String driverFirstName;
     private String driverLastName;
     private String driverNic;
     private String driverMobile;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public int getDriverId() {
         return driverId;

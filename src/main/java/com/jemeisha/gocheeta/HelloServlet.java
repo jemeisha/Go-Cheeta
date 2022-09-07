@@ -52,34 +52,41 @@ public class HelloServlet extends HttpServlet {
 //            System.out.println(e);
 //        }
 
+        try {
+            int orderID= db.createOrder("helen","CAS3922",1,1,3,1000,1);
+            System.out.println("order id"+ orderID);
+        }catch (Exception e){
+            System.out.println(e);
+
+        }
+
 //        try {
-//            int orderID= db.createOrder("helen","CAS3922",1,1,3,1000,1);
-//            System.out.println("order id"+ orderID);
-//        }catch (Exception e){
-//            System.out.println(e);
+//            Order order=Logic.bookARide("helen",1,2);
+//            Logic.changeOrderStatus(order.getOrderID(),2);
+//            //System.out.println("token "+ token);
+//
 //
 //        }
+//        catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        } catch (ClassNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (OrderAlreadyExist e) {
+//            throw new RuntimeException(e);
+//        } catch (NoDriversAvailable e) {
+//            throw new RuntimeException(e);
+//        } catch (OrderCannotBeFound e) {
+//            throw new RuntimeException(e);
+//        } catch (DistanceNotFound e) {
+//            throw new RuntimeException(e);
+//        }
 
-        try {
-            Order order=Logic.bookARide("helen",1,2);
-            Logic.changeOrderStatus(order.getOrderID(),2);
-            //System.out.println("token "+ token);
 
+//            ArrayList<Order> getOrdersByDriverId= db.getOrdersByDriverId(1,true);
+//
+//        System.out.println("length: "+getOrdersByDriverId.size());
+//           // System.out.println(e);
 
-        }
-        catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (OrderAlreadyExist e) {
-            throw new RuntimeException(e);
-        } catch (NoDriversAvailable e) {
-            throw new RuntimeException(e);
-        } catch (OrderCannotBeFound e) {
-            throw new RuntimeException(e);
-        } catch (DistanceNotFound e) {
-            throw new RuntimeException(e);
-        }
         response.setContentType("text/html");
 
         // Hello

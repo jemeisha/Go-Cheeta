@@ -143,6 +143,7 @@ public class DBUtil {
             driverFound = rs.next();
             if (driverFound) {
                 driver.setDriverId(rs.getInt("driver_id"));
+                driver.setPassword(rs.getString("password"));
                 driver.setDriverFirstName(rs.getString("first_name"));
                 driver.setDriverLastName(rs.getString("last_name"));
                 driver.setDriverNic(rs.getString("NIC"));
@@ -174,6 +175,7 @@ public class DBUtil {
                 Driver driver = new Driver();
 
                 driver.setDriverId(resultSet.getInt("driver_id"));
+                driver.setPassword(resultSet.getString("password"));
                 driver.setDriverFirstName(resultSet.getString("first_name"));
                 driver.setDriverLastName(resultSet.getString("last_name"));
                 driver.setDriverNic(resultSet.getString("NIC"));
@@ -201,6 +203,7 @@ public class DBUtil {
                 Driver driver = new Driver();
 
                 driver.setDriverId(resultSet.getInt("driver_id"));
+                driver.setPassword(resultSet.getString("password"));
                 driver.setDriverFirstName(resultSet.getString("first_name"));
                 driver.setDriverLastName(resultSet.getString("last_name"));
                 driver.setDriverNic(resultSet.getString("NIC"));
@@ -229,7 +232,7 @@ public class DBUtil {
             if (vehicleFound) {
                 vehicle.setVehicleNo(rs.getString("vehicle_no"));
                 vehicle.setDriverId(rs.getInt("driver_id"));
-                vehicle.setVehicleType(rs.getString("vehicle_type"));
+                vehicle.setVehicleType(rs.getInt("vehicle_category"));
                 vehicle.setNoOfSeats(rs.getInt("noOfSeats"));
                 vehicle.setVehicleColour(rs.getString("colour"));
 
@@ -260,7 +263,7 @@ public class DBUtil {
 
                 vehicle.setVehicleNo(resultSet.getString("vehicle_no"));
                 //vehicle.setDriverId(resultSet.getInt("driver_id"));
-                vehicle.setVehicleType(resultSet.getString("vehicle_type"));
+                vehicle.setVehicleType(resultSet.getInt("vehicle_category"));
                 vehicle.setNoOfSeats(resultSet.getInt("noOfSeats"));
                 vehicle.setVehicleColour(resultSet.getString("colour"));
                 vehicleList.add(vehicle);
@@ -315,7 +318,7 @@ public class DBUtil {
             if (vehicleFound) {
                 vehicle.setVehicleNo(rs.getString("vehicle_no"));
                 vehicle.setDriverId(rs.getInt("driver_id"));
-                vehicle.setVehicleType(rs.getString("vehicle_type"));
+                vehicle.setVehicleType(rs.getInt("vehicle_category"));
                 vehicle.setNoOfSeats(rs.getInt("noOfSeats"));
                 vehicle.setVehicleColour(rs.getString("colour"));
 
@@ -460,6 +463,36 @@ public class DBUtil {
 
     }
 
+    public ArrayList<Order> getOrdersByDriverId(int driverId,boolean ongoing){
+        ArrayList<Order> orderList = new ArrayList<>();
+        int rowsAffected = 0;
+        try {
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `order` WHERE driver_id=? AND booking_state<=?");
+            ps.setInt(1, driverId);
+            ps.setInt(2, ongoing?2:3);//ternary operator
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Order order = new Order();
+
+                order.setOrderID(resultSet.getInt("order_id"));
+                order.setUsername(resultSet.getString("username"));
+                order.setVehicleNo(resultSet.getString("vehicle_no"));
+                order.setDriverID(resultSet.getInt("driver_id"));
+                order.setPickup(resultSet.getInt("pickup"));
+                order.setDestination(resultSet.getInt("destination"));
+                order.setTotal(resultSet.getInt("total"));
+                order.setBookingState(resultSet.getInt("booking_state"));
+
+                orderList.add(order);
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+        return orderList;
+
+    }
 
     public double getDistance(int locationOne,int locationTwo){
 
@@ -493,8 +526,73 @@ public class DBUtil {
 
     }
 
+    public int createCategory(
+            String name
+
+    ) throws SQLException, ClassNotFoundException {
+        int rowsAffected = 0;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO `category`(`name`) VALUES (?)",Statement.RETURN_GENERATED_KEYS);
+
+            ps.setString(1, name);
+
+            rowsAffected = ps.executeUpdate();
+            //get the auto generated id
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return (generatedKeys.getInt(1));
+                }
+                else {
+                    throw new SQLException("Creating category failed, no ID obtained.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+    public double getTotalSales(){
 
 
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT COALESCE(SUM(`total`),0) AS `sum` FROM `order` WHERE booking_state=3");
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return rs.getDouble("sum");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return -1; //distance not found
+
+
+    }
+
+    public double getSalesByBranch(int branchId){
+
+
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT COALESCE(SUM(`total`),0) AS `sum` FROM `order` WHERE pickup=? AND booking_state=3");
+            ps.setInt(1, branchId);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return rs.getDouble("sum");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return -1; //distance not found
+
+
+    }
 
     //getCustomerByUsername
     //createCustomer
@@ -508,8 +606,6 @@ public class DBUtil {
 
     //getDriverById
     //getAllDrivers
-    //changeDriverStatus------XX
-    //assignDriverToOrder--------XX
     //getAvailableDrivers
 
     //getVehicleById
@@ -524,6 +620,13 @@ public class DBUtil {
     //getOrdersByDriverId--------------.......
 
     //-------Admin---------
+     //createCategory
+     //getAllCategories
+     //getVehiclesByCategory
+     //getSalesByBranch
+     //getTotalSales
+     //getAllOrders
+
 
     //
 }

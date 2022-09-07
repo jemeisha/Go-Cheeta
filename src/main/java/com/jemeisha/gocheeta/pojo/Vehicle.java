@@ -5,7 +5,7 @@ public class Vehicle {
     private String vehicleNo;
 
     private int driverId;
-    private String vehicleType;
+    private int vehicleType;
     private int noOfSeats;
     private String vehicleColour;
 
@@ -25,11 +25,11 @@ public class Vehicle {
         this.vehicleNo = vehicleNo;
     }
 
-    public String getVehicleType() {
+    public int getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(String vehicleType) {
+    public void setVehicleType(int vehicleType) {
         this.vehicleType = vehicleType;
     }
 
