@@ -5,8 +5,13 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.jemeisha.gocheeta.errors.DistanceNotFound;
+import com.jemeisha.gocheeta.errors.NoDriversAvailable;
+import com.jemeisha.gocheeta.errors.OrderAlreadyExist;
+import com.jemeisha.gocheeta.errors.OrderCannotBeFound;
 import com.jemeisha.gocheeta.pojo.Customer;
 import com.jemeisha.gocheeta.pojo.Driver;
+import com.jemeisha.gocheeta.pojo.Order;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -56,13 +61,23 @@ public class HelloServlet extends HttpServlet {
 //        }
 
         try {
-            Logic.bookARide("helen",1,3);
+            Order order=Logic.bookARide("helen",1,2);
+            Logic.changeOrderStatus(order.getOrderID(),2);
             //System.out.println("token "+ token);
+
 
         }
         catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (OrderAlreadyExist e) {
+            throw new RuntimeException(e);
+        } catch (NoDriversAvailable e) {
+            throw new RuntimeException(e);
+        } catch (OrderCannotBeFound e) {
+            throw new RuntimeException(e);
+        } catch (DistanceNotFound e) {
             throw new RuntimeException(e);
         }
         response.setContentType("text/html");

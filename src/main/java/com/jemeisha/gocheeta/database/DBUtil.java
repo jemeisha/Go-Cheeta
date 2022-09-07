@@ -108,7 +108,7 @@ public class DBUtil {
         return customerList;
     }
 
-    public ArrayList<Branch> getStudents() {
+    public ArrayList<Branch> getBranches() {
         ArrayList<Branch> branchList = new ArrayList<>();
         try {
             Class.forName(CLASS_NAME);
@@ -367,7 +367,7 @@ public class DBUtil {
             int driverID,
             int pickup,
             int destination,
-            int total,
+            double total,
             int bookingState
 
 
@@ -383,7 +383,7 @@ public class DBUtil {
             ps.setInt(3, driverID);
             ps.setInt(4, pickup);
             ps.setInt(5, destination);
-            ps.setInt(6, total);
+            ps.setDouble(6, total);
             ps.setInt(7, bookingState);
 
             rowsAffected = ps.executeUpdate();
@@ -401,30 +401,129 @@ public class DBUtil {
             throw e;
         }
     }
+
+    public Order getOrderByOrderId(int orderId) {
+
+        Order order= new Order();
+        boolean orderFound = false;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `order` WHERE order_id=?");
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            orderFound = rs.next();
+            if (orderFound) {
+                order.setOrderID(rs.getInt("order_id"));
+                order.setUsername(rs.getString("username"));
+                order.setDriverID(rs.getInt("driver_id"));
+                order.setPickup(rs.getInt("pickup"));
+                order.setDestination(rs.getInt("destination"));
+                order.setTotal(rs.getInt("total"));
+                order.setBookingState(rs.getInt("booking_state"));
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        if (orderFound) {
+            return order;
+        } else {
+            return null;
+        }
+    }
+
+    public boolean updateOrderStatusById(int orderId,int status) throws SQLException, ClassNotFoundException {
+
+        int rowsAffected = 0;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("UPDATE `order` SET booking_state=? WHERE order_id=?");
+
+            ps.setInt(1, status);
+            ps.setInt(2, orderId);
+
+
+            rowsAffected = ps.executeUpdate();
+            //get the auto generated id
+          return rowsAffected>0;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+
+
+
+    }
+
+
+    public double getDistance(int locationOne,int locationTwo){
+
+        if(locationTwo<locationOne){
+
+            int temp= locationOne;
+            locationOne=locationTwo;
+            locationTwo=temp;
+        }
+        boolean distanceFound = false;
+
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `distance` WHERE distance_one=? AND distance_two=?");
+            ps.setInt(1, locationOne);
+            ps.setInt(2, locationTwo);
+            ResultSet rs = ps.executeQuery();
+
+            distanceFound = rs.next();
+            if (distanceFound) {
+                return rs.getDouble("distance");
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return -1; //distance not found
+
+
+    }
+
+
+
+
     //getCustomerByUsername
     //createCustomer
     //getAllCustomers
 
     //getAllBranches
     //getBranchById
-//--------------TODO
+
     //getDistance
-//------------------------
+
 
     //getDriverById
     //getAllDrivers
     //changeDriverStatus------XX
     //assignDriverToOrder--------XX
-    //getAvailableDrivers--------
+    //getAvailableDrivers
 
     //getVehicleById
     //getAllVehicles
     //createVehicle
-    //updateVehicleById-------------
+    //updateVehicleById-------------update driver id column.....
     //getVehicleByDriverId
 
     //createOrder-------------
     //updateOrderStatusById-----------------
-    //cancelOrder-----------------------
-    //getOrdersByUsername---------------
+    //getOrdersByUsername
+    //getOrdersByDriverId--------------.......
+
+    //-------Admin---------
+
+    //
 }

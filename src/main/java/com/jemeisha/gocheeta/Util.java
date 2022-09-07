@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class Util {
 
+    private final static double PRICE_PER_KM= 80.0;
     public static String hashMD5(String password) throws NoSuchAlgorithmException {
 
         MessageDigest md= MessageDigest.getInstance("MD5");
@@ -19,5 +20,12 @@ public class Util {
             sb.append(String.format("%02x", b));
         }
         return sb.toString();
+    }
+
+    public static double calculatePrice(double distance){
+
+        return PRICE_PER_KM*distance;
+
+
     }
 }

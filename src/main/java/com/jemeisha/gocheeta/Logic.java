@@ -1,6 +1,10 @@
 package com.jemeisha.gocheeta;
 
 import com.jemeisha.gocheeta.database.DBUtil;
+import com.jemeisha.gocheeta.errors.DistanceNotFound;
+import com.jemeisha.gocheeta.errors.NoDriversAvailable;
+import com.jemeisha.gocheeta.errors.OrderAlreadyExist;
+import com.jemeisha.gocheeta.errors.OrderCannotBeFound;
 import com.jemeisha.gocheeta.pojo.Customer;
 import com.jemeisha.gocheeta.pojo.Driver;
 import com.jemeisha.gocheeta.pojo.Order;
@@ -49,35 +53,60 @@ public class Logic {
         }
     }
 
-    public static void bookARide(String username, int startingLocation, int endingLocation) throws SQLException, ClassNotFoundException {
+    public static Order bookARide(String username, int startingLocation, int endingLocation) throws SQLException, ClassNotFoundException, OrderAlreadyExist, NoDriversAvailable, DistanceNotFound {
 
         DBUtil db = DBUtil.getSingletonInstance();
 
         ArrayList<Order> ongoingOrders = db.getOrdersByUsername(username, true);
         if (ongoingOrders.size() > 0) {
             //customer has ongoing order, decline order
+            throw new OrderAlreadyExist();
         } else {
             ArrayList<Driver> availableDrivers = db.getAvailableDrivers(startingLocation);
             if (availableDrivers.size() > 0) {
+                double distance= db.getDistance(startingLocation,endingLocation);
+                if(distance<0){
+                    throw new DistanceNotFound();
+                }
+                double total= Util.calculatePrice(distance);
                 Driver driver = availableDrivers.get(0);
                 String vehicleNo = db.getVehicleByDriverId(driver.getDriverId()).getVehicleNo();
-                int orderID = db.createOrder(username, vehicleNo, driver.getDriverId(), startingLocation, endingLocation, 1000, 0);
+                int orderID = db.createOrder(username, vehicleNo, driver.getDriverId(), startingLocation, endingLocation, total, 0);
 
-            Order order= new Order();
-            order.setOrderID(orderID);
-            order.setUsername(username);
-            order.setVehicleNo(vehicleNo);
-            order.setDriverID(driver.getDriverId());
-            order.setPickup(startingLocation);
-            order.setDestination(endingLocation);
-            order.setTotal(1000);
-            order.setBookingState(0);
+                Order order = new Order();
+                order.setOrderID(orderID);
+                order.setUsername(username);
+                order.setVehicleNo(vehicleNo);
+                order.setDriverID(driver.getDriverId());
+                order.setPickup(startingLocation);
+                order.setDestination(endingLocation);
+                order.setTotal(total);
+                order.setBookingState(0);
+
+                return order;
             } else {
+                throw new NoDriversAvailable();
 
                 // no drivers available, decline order
             }
         }
 
 
-    }
+}
+   public static boolean changeOrderStatus(int orderId,int state) throws SQLException, ClassNotFoundException, OrderCannotBeFound {
+        DBUtil db = DBUtil.getSingletonInstance();
+        Order order= db.getOrderByOrderId(orderId);
+
+        if(order!=null){
+            return db.updateOrderStatusById(orderId,state);
+
+        }else{
+            //order does not exist.Throw error
+            throw new OrderCannotBeFound();
+
+        }
+
+
+   }
+
 }

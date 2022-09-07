@@ -7,7 +7,7 @@ public class Order {
     private int driverID;
     private int pickup;
     private int destination;
-    private int total;
+    private double total;
     private int bookingState;
 
     public int getOrderID() {
@@ -58,11 +58,11 @@ public class Order {
         this.destination = destination;
     }
 
-    public int getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
