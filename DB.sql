@@ -140,17 +140,21 @@ INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`
 INSERT INTO `vehicle` (`vehicle_no`,`driver_id`,`vehicle_category`,`noOfSeats`,`colour`) VALUES ('PK7256',7,3,5,'White');
 
 
-INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('1', '1', '0.0');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('1', '2', '36.9');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('1', '3', '114.4');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('1', '4', '124.4');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('1', '5', '102.8');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('1', '6', '403.2');
-INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('2', '2', '0.0');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('2', '3', '134.7');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('2', '4', '90.3');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('2', '5', '68.7');
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('2', '6', '369.1');
+INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('3', '4', '222.1');
+INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('3', '5', '200.5');
+INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('3', '6', '500.9');
+INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('4', '5', '42.7');
+INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('4', '6', '316.8');
+INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('5', '6', '301.6');
 
 
 -- SELECT * FROM go_cheeta.driver WHERE branch_id=1 AND driver_id NOT IN (SELECT driver_id FROM `order` WHERE booking_state <=2 );
