@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
+    <endpoint
+            name="HelloWebService"
+            implementation="com.jemeisha.gocheeta.webservice.MyWebService"
+            url-pattern="/ws/hello"/>
+
+    <endpoint
+        name="Logic"
+        implementation="com.jemeisha.gocheeta.Logic"
+        url-pattern="/ws/logic"/>
+</endpoints>

@@ -148,7 +148,7 @@ public class DBUtil {
                 driver.setDriverLastName(rs.getString("last_name"));
                 driver.setDriverNic(rs.getString("NIC"));
                 driver.setDriverMobile(rs.getString("mobile"));
-                //branch id here and in Driver class
+                driver.setBranchId(rs.getInt("branch_id"));
             }
 
         } catch (Exception e) {
@@ -180,7 +180,7 @@ public class DBUtil {
                 driver.setDriverLastName(resultSet.getString("last_name"));
                 driver.setDriverNic(resultSet.getString("NIC"));
                 driver.setDriverMobile(resultSet.getString("mobile"));
-                //driver branch id
+                driver.setBranchId(resultSet.getInt("branch_id"));
                 driverList.add(driver);
             }
         } catch (Exception e) {
@@ -208,7 +208,7 @@ public class DBUtil {
                 driver.setDriverLastName(resultSet.getString("last_name"));
                 driver.setDriverNic(resultSet.getString("NIC"));
                 driver.setDriverMobile(resultSet.getString("mobile"));
-                //driver branch id
+                driver.setBranchId(resultSet.getInt("branch_id"));
                 driverList.add(driver);
             }
         } catch(Exception e) {
@@ -262,7 +262,7 @@ public class DBUtil {
                 Vehicle vehicle = new Vehicle();
 
                 vehicle.setVehicleNo(resultSet.getString("vehicle_no"));
-                //vehicle.setDriverId(resultSet.getInt("driver_id"));
+                vehicle.setDriverId(resultSet.getInt("driver_id"));
                 vehicle.setVehicleType(resultSet.getInt("vehicle_category"));
                 vehicle.setNoOfSeats(resultSet.getInt("noOfSeats"));
                 vehicle.setVehicleColour(resultSet.getString("colour"));
@@ -553,6 +553,61 @@ public class DBUtil {
             throw e;
         }
     }
+
+    public ArrayList<Category> getAllCategories() {
+        ArrayList<Category> categoryList = new ArrayList<>();
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement statement = conn.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM category");
+            while (resultSet.next()) {
+                Category category = new Category();
+
+                category.setCategoryId(resultSet.getInt("category_id"));
+                category.setName(resultSet.getString("name"));
+
+                categoryList.add(category);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return categoryList;
+    }
+
+    public ArrayList<Vehicle> getVehiclesByCategory(int category) {
+        ArrayList<Vehicle> vehicleList = new ArrayList<>();
+
+
+        boolean vehicleFound = false;
+        try {
+
+
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `vehicle` WHERE vehicle_category=?");
+
+            ps.setInt(1,category);
+            ResultSet resultSet = ps.executeQuery();
+
+
+            while (resultSet.next()) {
+                Vehicle vehicle = new Vehicle();
+
+                vehicle.setVehicleNo(resultSet.getString("vehicle_no"));
+                vehicle.setDriverId(resultSet.getInt("driver_id"));
+                vehicle.setVehicleType(resultSet.getInt("vehicle_category"));
+                vehicle.setNoOfSeats(resultSet.getInt("noOfSeats"));
+                vehicle.setVehicleColour(resultSet.getString("colour"));
+                vehicleList.add(vehicle);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return vehicleList;
+    }
+
     public double getTotalSales(){
 
 
@@ -625,7 +680,7 @@ public class DBUtil {
      //getVehiclesByCategory
      //getSalesByBranch
      //getTotalSales
-     //getAllOrders
+     //getAllOrders---------..........
 
 
     //

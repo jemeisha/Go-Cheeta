@@ -9,13 +9,23 @@ import com.jemeisha.gocheeta.pojo.Customer;
 import com.jemeisha.gocheeta.pojo.Driver;
 import com.jemeisha.gocheeta.pojo.Order;
 
+import javax.jws.WebMethod;
+import javax.jws.WebResult;
+import javax.jws.WebService;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@WebService
 public class Logic {
-
-    public static Customer register(String username, String password, String cusFirstName, String cusLastName, String cusMobNo) throws NoSuchAlgorithmException {
+    @WebMethod
+//    @WebResult(targetNamespace = "go_cheeta")
+    public String sayHello(){
+        return "Hello";
+    }
+    @WebMethod
+    @WebResult(targetNamespace = "go_cheeta")
+    public Customer register(String username, String password, String cusFirstName, String cusLastName, String cusMobNo) throws NoSuchAlgorithmException {
         String md5Password = Util.hashMD5(password);
         Customer customer = new Customer();
         customer.setUsername(username);
@@ -78,7 +88,7 @@ public class Logic {
         final String ADMIN_USERNAME = "admin";
         final String ADMIN_PASSWORD = "pass";
 
-        if (ADMIN_USERNAME.equals(username)&&ADMIN_PASSWORD.equals(password) ) {
+        if (ADMIN_USERNAME.equals(username) && ADMIN_PASSWORD.equals(password)) {
 
             return "JWT";
         } else {

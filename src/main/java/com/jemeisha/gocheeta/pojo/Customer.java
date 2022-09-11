@@ -1,5 +1,8 @@
 package com.jemeisha.gocheeta.pojo;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="Customer")
 public class Customer {
     private String username;
     private String password;

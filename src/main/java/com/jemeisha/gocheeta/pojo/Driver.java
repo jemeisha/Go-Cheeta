@@ -9,6 +9,7 @@ public class Driver {
     private String driverLastName;
     private String driverNic;
     private String driverMobile;
+    private int  branchId;
 
     public String getPassword() {
         return password;
@@ -56,5 +57,13 @@ public class Driver {
 
     public void setDriverMobile(String driverMobile) {
         this.driverMobile = driverMobile;
+    }
+
+    public int getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(int branchId) {
+        this.branchId = branchId;
     }
 }
