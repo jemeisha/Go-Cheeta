@@ -42,8 +42,8 @@ public class Logic {
         return customer;
 
     }
-
-    public static String login(String username, String password) throws NoSuchAlgorithmException {
+@WebMethod
+    public String login(String username, String password) throws NoSuchAlgorithmException {
 
         DBUtil db = DBUtil.getSingletonInstance();
         Customer customer = db.getCustomerByUsername(username);
@@ -152,6 +152,13 @@ public class Logic {
         }
 
 
+    }
+    public boolean isLoggedIn(String jwt){
+
+
+
+
+        return true;
     }
 
 }

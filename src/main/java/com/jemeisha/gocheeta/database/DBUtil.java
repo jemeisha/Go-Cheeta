@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBUtil {
-    static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/go_cheeta";
+    static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/go_cheeta?autoReconnect=true&useSSL=false";
     static final String USER = "root";
     static final String PASS = "example";
     static final String CLASS_NAME = "com.mysql.cj.jdbc.Driver";
@@ -648,6 +648,33 @@ public class DBUtil {
 
 
     }
+    public ArrayList<Order> getAllOrders() {
+        ArrayList<Order> orderList = new ArrayList<>();
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement statement = conn.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM order");
+            while (resultSet.next()) {
+                Order order = new Order();
+
+                order.setOrderID(resultSet.getInt("order_id"));
+                order.setUsername(resultSet.getString("username"));
+                order.setVehicleNo(resultSet.getString("vehicle_no"));
+                order.setDriverID(resultSet.getInt("driver_id"));
+                order.setPickup(resultSet.getInt("pickup"));
+                order.setDestination(resultSet.getInt("destination"));
+                order.setTotal(resultSet.getInt("total"));
+                order.setBookingState(resultSet.getInt("booking_state"));
+
+                orderList.add(order);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return orderList;
+    }
 
     //getCustomerByUsername
     //createCustomer
@@ -669,10 +696,10 @@ public class DBUtil {
     //updateVehicleById-------------update driver id column.....
     //getVehicleByDriverId
 
-    //createOrder-------------
-    //updateOrderStatusById-----------------
+    //createOrder
+    //updateOrderStatusById
     //getOrdersByUsername
-    //getOrdersByDriverId--------------.......
+    //getOrdersByDriverId
 
     //-------Admin---------
      //createCategory
@@ -680,7 +707,9 @@ public class DBUtil {
      //getVehiclesByCategory
      //getSalesByBranch
      //getTotalSales
-     //getAllOrders---------..........
+     //getAllOrders
+    //getAllOrdersByBranch........
+
 
 
     //
