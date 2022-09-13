@@ -158,3 +158,12 @@ INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) 
 
 
 -- SELECT * FROM go_cheeta.driver WHERE branch_id=1 AND driver_id NOT IN (SELECT driver_id FROM `order` WHERE booking_state <=2 );
+
+-- Admin Panel pages---
+
+-- Manage Drivers
+-- Manage Branches
+-- Sales details
+-- Customer Feedback
+-- Manage bookings
+-- Manage customers

@@ -1,5 +1,6 @@
 package com.jemeisha.gocheeta;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.jemeisha.gocheeta.database.DBUtil;
 import com.jemeisha.gocheeta.errors.DistanceNotFound;
 import com.jemeisha.gocheeta.errors.NoDriversAvailable;
@@ -51,8 +52,8 @@ public class Logic {
         if (customer != null) {
             String newPassword = Util.hashMD5(password);
             if (newPassword.equals(customer.getPassword())) {
-
-                return "JWT";
+               String jwt= Util.signJWT(username);
+                return jwt;
             } else {
                 return null;
             }
@@ -153,12 +154,17 @@ public class Logic {
 
 
     }
+    @WebMethod
     public boolean isLoggedIn(String jwt){
 
+        DecodedJWT decodedJWT= Util.verifyToken(jwt);
+        if(decodedJWT!=null){
+            return true;
+        }else {
+            return true;
+        }
+        //return decodedJWT!=null; --------samething as if
 
-
-
-        return true;
     }
 
 }
