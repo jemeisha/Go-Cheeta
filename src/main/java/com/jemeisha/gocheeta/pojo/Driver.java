@@ -3,7 +3,6 @@ package com.jemeisha.gocheeta.pojo;
 public class Driver {
 
     private int driverId;
-
     private String password;
     private String driverFirstName;
     private String driverLastName;

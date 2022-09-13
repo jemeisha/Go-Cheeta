@@ -3,7 +3,6 @@ package com.jemeisha.gocheeta.pojo;
 public class Vehicle {
 
     private String vehicleNo;
-
     private int driverId;
     private int vehicleType;
     private int noOfSeats;

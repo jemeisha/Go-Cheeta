@@ -37,11 +37,13 @@ public class Util {
         return PRICE_PER_KM*distance;
     }
 
-    public static String signJWT(String username){
+    public static String signJWT(String username,String audience){
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             String token = JWT.create()
-                    .withIssuer(ISSUER).withSubject(username)
+                    .withIssuer(ISSUER)
+                    .withSubject(username)
+                    .withAudience(audience)
                     .sign(algorithm);
             return token;
         } catch (JWTCreationException exception){
@@ -51,11 +53,12 @@ public class Util {
 
     }
 
-    public static DecodedJWT verifyToken(String token){
+    public static DecodedJWT verifyToken(String token,String audience){
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET); //use more secure key
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer(ISSUER)
+                    .withAudience(audience)
                     .build(); //Reusable verifier instance
             DecodedJWT jwt = verifier.verify(token);
             return jwt;

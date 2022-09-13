@@ -19,11 +19,17 @@ import java.util.ArrayList;
 
 @WebService
 public class Logic {
+
+    public final String CUSTOMER_AUDIENCE = "customer";
+    public final String ADMIN_AUDIENCE = "admin";
+    public final String DRIVER_AUDIENCE = "driver";
+
     @WebMethod
 //    @WebResult(targetNamespace = "go_cheeta")
-    public String sayHello(){
+    public String sayHello() {
         return "Hello";
     }
+
     @WebMethod
     @WebResult(targetNamespace = "go_cheeta")
     public Customer register(String username, String password, String cusFirstName, String cusLastName, String cusMobNo) throws NoSuchAlgorithmException {
@@ -43,7 +49,8 @@ public class Logic {
         return customer;
 
     }
-@WebMethod
+
+    @WebMethod
     public String login(String username, String password) throws NoSuchAlgorithmException {
 
         DBUtil db = DBUtil.getSingletonInstance();
@@ -52,7 +59,7 @@ public class Logic {
         if (customer != null) {
             String newPassword = Util.hashMD5(password);
             if (newPassword.equals(customer.getPassword())) {
-               String jwt= Util.signJWT(username);
+                String jwt = Util.signJWT(username, CUSTOMER_AUDIENCE);
                 return jwt;
             } else {
                 return null;
@@ -63,17 +70,18 @@ public class Logic {
 
         }
     }
-
-    public static String loginDriver(int driverId, String password) throws NoSuchAlgorithmException {
+    @WebMethod
+    public String loginDriver(String driverId, String password) throws NoSuchAlgorithmException {
 
         DBUtil db = DBUtil.getSingletonInstance();
-        Driver driver = db.getDriverById(driverId);
+        int dId= Integer.parseInt(driverId);
+        Driver driver = db.getDriverById(dId);
 
         if (driver != null) {
             String newPassword = Util.hashMD5(password);
             if (newPassword.equals(driver.getPassword())) {
-
-                return "JWT";
+                String jwt = Util.signJWT(driverId, DRIVER_AUDIENCE);
+                return jwt;
             } else {
                 return null;
             }
@@ -83,15 +91,16 @@ public class Logic {
 
         }
     }
-
-    public static String loginAdmin(String username, String password) {
+    @WebMethod
+    public String loginAdmin(String username, String password) {
 
         final String ADMIN_USERNAME = "admin";
         final String ADMIN_PASSWORD = "pass";
 
         if (ADMIN_USERNAME.equals(username) && ADMIN_PASSWORD.equals(password)) {
 
-            return "JWT";
+            String jwt = Util.signJWT(username, ADMIN_AUDIENCE);
+            return jwt;
         } else {
             return null;
         }
@@ -154,17 +163,49 @@ public class Logic {
 
 
     }
-    @WebMethod
-    public boolean isLoggedIn(String jwt){
 
-        DecodedJWT decodedJWT= Util.verifyToken(jwt);
-        if(decodedJWT!=null){
+    @WebMethod
+    public boolean isLoggedIn(String jwt) {
+
+        DecodedJWT decodedJWT = Util.verifyToken(jwt,CUSTOMER_AUDIENCE);
+        if (decodedJWT != null) {
             return true;
-        }else {
+        } else {
             return true;
         }
         //return decodedJWT!=null; --------samething as if
 
     }
 
+    @WebMethod
+    public boolean isDriverLoggedIn(String jwt) {
+
+        DecodedJWT decodedJWT = Util.verifyToken(jwt,DRIVER_AUDIENCE);
+        if (decodedJWT != null) {
+            return true;
+        } else {
+            return true;
+        }
+        //return decodedJWT!=null; --------samething as if
+
+    }
+
+    @WebMethod
+    public boolean isAdminLoggedIn(String jwt) {
+
+        DecodedJWT decodedJWT = Util.verifyToken(jwt,ADMIN_AUDIENCE);
+        if (decodedJWT != null) {
+            return true;
+        } else {
+            return true;
+        }
+        //return decodedJWT!=null; --------samething as if
+
+    }
+    @WebMethod
+    public Driver[] getAllDrivers(){
+        DBUtil db= DBUtil.getSingletonInstance();
+        ArrayList<Driver> drivers= db.getAllDrivers();
+        return drivers.toArray(new Driver[0]);
+    }
 }
