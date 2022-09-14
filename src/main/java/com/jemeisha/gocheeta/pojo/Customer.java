@@ -1,10 +1,12 @@
 package com.jemeisha.gocheeta.pojo;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name="Customer")
 public class Customer {
     private String username;
+    @XmlTransient  //
     private String password;
     private String cusFistName;
     private String cusLastName;

@@ -1,14 +1,24 @@
 package com.jemeisha.gocheeta.pojo;
 
+import com.jemeisha.gocheeta.database.DBUtil;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlRootElement(name="Driver")
 public class Driver {
 
     private int driverId;
+    @XmlTransient
     private String password;
     private String driverFirstName;
     private String driverLastName;
     private String driverNic;
     private String driverMobile;
     private int  branchId;
+    private Vehicle vehicle;
+
+    private String vehicleNo;
 
     public String getPassword() {
         return password;
@@ -64,5 +74,26 @@ public class Driver {
 
     public void setBranchId(int branchId) {
         this.branchId = branchId;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public String getVehicleNo() {
+        return vehicleNo;
+    }
+
+    public void setVehicleNo(String vehicleNo) {
+        this.vehicleNo = vehicleNo;
+    }
+
+    public void loadVehicle(){
+        DBUtil db= DBUtil.getSingletonInstance();
+        this.vehicle=db.getVehicleById(this.vehicleNo);
     }
 }

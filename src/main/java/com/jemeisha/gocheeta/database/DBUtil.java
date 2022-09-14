@@ -95,7 +95,7 @@ public class DBUtil {
             while (resultSet.next()) {
                 Customer customer = new Customer();
 
-                customer.setCusFistName(resultSet.getString("username"));
+                customer.setUsername(resultSet.getString("username"));
                 customer.setCusLastName(resultSet.getString("password"));
                 customer.setCusFistName(resultSet.getString("first_name"));
                 customer.setCusLastName(resultSet.getString("last_name"));
@@ -149,6 +149,7 @@ public class DBUtil {
                 driver.setDriverNic(rs.getString("NIC"));
                 driver.setDriverMobile(rs.getString("mobile"));
                 driver.setBranchId(rs.getInt("branch_id"));
+                driver.setVehicleNo(rs.getString("vehicle_no"));
             }
 
         } catch (Exception e) {
@@ -181,6 +182,8 @@ public class DBUtil {
                 driver.setDriverNic(resultSet.getString("NIC"));
                 driver.setDriverMobile(resultSet.getString("mobile"));
                 driver.setBranchId(resultSet.getInt("branch_id"));
+                driver.setVehicleNo(resultSet.getString("vehicle_no"));
+
                 driverList.add(driver);
             }
         } catch (Exception e) {
@@ -209,6 +212,8 @@ public class DBUtil {
                 driver.setDriverNic(resultSet.getString("NIC"));
                 driver.setDriverMobile(resultSet.getString("mobile"));
                 driver.setBranchId(resultSet.getInt("branch_id"));
+                driver.setVehicleNo(resultSet.getString("vehicle_no"));
+
                 driverList.add(driver);
             }
         } catch(Exception e) {
@@ -231,7 +236,7 @@ public class DBUtil {
             vehicleFound = rs.next();
             if (vehicleFound) {
                 vehicle.setVehicleNo(rs.getString("vehicle_no"));
-                vehicle.setDriverId(rs.getInt("driver_id"));
+//                vehicle.setDriverId(rs.getInt("driver_id"));
                 vehicle.setVehicleType(rs.getInt("vehicle_category"));
                 vehicle.setNoOfSeats(rs.getInt("noOfSeats"));
                 vehicle.setVehicleColour(rs.getString("colour"));
@@ -262,7 +267,7 @@ public class DBUtil {
                 Vehicle vehicle = new Vehicle();
 
                 vehicle.setVehicleNo(resultSet.getString("vehicle_no"));
-                vehicle.setDriverId(resultSet.getInt("driver_id"));
+//                vehicle.setDriverId(resultSet.getInt("driver_id"));
                 vehicle.setVehicleType(resultSet.getInt("vehicle_category"));
                 vehicle.setNoOfSeats(resultSet.getInt("noOfSeats"));
                 vehicle.setVehicleColour(resultSet.getString("colour"));
@@ -317,7 +322,7 @@ public class DBUtil {
             vehicleFound = rs.next();
             if (vehicleFound) {
                 vehicle.setVehicleNo(rs.getString("vehicle_no"));
-                vehicle.setDriverId(rs.getInt("driver_id"));
+//                vehicle.setDriverId(rs.getInt("driver_id"));
                 vehicle.setVehicleType(rs.getInt("vehicle_category"));
                 vehicle.setNoOfSeats(rs.getInt("noOfSeats"));
                 vehicle.setVehicleColour(rs.getString("colour"));
@@ -596,7 +601,7 @@ public class DBUtil {
                 Vehicle vehicle = new Vehicle();
 
                 vehicle.setVehicleNo(resultSet.getString("vehicle_no"));
-                vehicle.setDriverId(resultSet.getInt("driver_id"));
+//                vehicle.setDriverId(resultSet.getInt("driver_id"));
                 vehicle.setVehicleType(resultSet.getInt("vehicle_category"));
                 vehicle.setNoOfSeats(resultSet.getInt("noOfSeats"));
                 vehicle.setVehicleColour(resultSet.getString("colour"));
@@ -648,14 +653,16 @@ public class DBUtil {
 
 
     }
-    public ArrayList<Order> getAllOrders() {
+    public ArrayList<Order> getAllOrders(boolean ongoing) {
         ArrayList<Order> orderList = new ArrayList<>();
         try {
             Class.forName(CLASS_NAME);
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement statement = conn.createStatement();
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM order");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `order` WHERE booking_state<=?");
+            ps.setInt(1, ongoing?2:3);//ternary operator
+            ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
                 Order order = new Order();
 

@@ -3,18 +3,18 @@ package com.jemeisha.gocheeta.pojo;
 public class Vehicle {
 
     private String vehicleNo;
-    private int driverId;
+//    private int driverId;
     private int vehicleType;
     private int noOfSeats;
     private String vehicleColour;
 
-    public int getDriverId() {
-        return driverId;
-    }
+//    public int getDriverId() {
+//        return driverId;
+//    }
 
-    public void setDriverId(int driverId) {
-        this.driverId = driverId;
-    }
+//    public void setDriverId(int driverId) {
+//        this.driverId = driverId;
+//    }
 
     public String getVehicleNo() {
         return vehicleNo;

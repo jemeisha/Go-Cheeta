@@ -6,9 +6,7 @@ import com.jemeisha.gocheeta.errors.DistanceNotFound;
 import com.jemeisha.gocheeta.errors.NoDriversAvailable;
 import com.jemeisha.gocheeta.errors.OrderAlreadyExist;
 import com.jemeisha.gocheeta.errors.OrderCannotBeFound;
-import com.jemeisha.gocheeta.pojo.Customer;
-import com.jemeisha.gocheeta.pojo.Driver;
-import com.jemeisha.gocheeta.pojo.Order;
+import com.jemeisha.gocheeta.pojo.*;
 
 import javax.jws.WebMethod;
 import javax.jws.WebResult;
@@ -208,4 +206,43 @@ public class Logic {
         ArrayList<Driver> drivers= db.getAllDrivers();
         return drivers.toArray(new Driver[0]);
     }
+
+    @WebMethod
+    public Driver[] getAllDriversWithVehicles(){
+        DBUtil db= DBUtil.getSingletonInstance();
+        ArrayList<Driver> drivers= db.getAllDrivers();
+        for(int x=0;x< drivers.size();x++){
+
+            Driver d= drivers.get(x);
+            d.loadVehicle();
+        }
+        return drivers.toArray(new Driver[0]);
+    }
+    @WebMethod
+    public Customer[] getAllCustomers(){
+        DBUtil db= DBUtil.getSingletonInstance();
+        ArrayList<Customer> customers= db.getAllCustomers();
+        return customers.toArray(new Customer[0]);
+    }
+    @WebMethod
+    public BookingInfomation getBookingInfomation(){
+        BookingInfomation bookingInfomation= new BookingInfomation();
+        DBUtil db= DBUtil.getSingletonInstance();
+        ArrayList<Order> ongoingBookings= db.getAllOrders(true);
+        ArrayList<Order> totalBookings= db.getAllOrders(false);
+
+        bookingInfomation.setOngoingBookings(ongoingBookings.size());
+        bookingInfomation.setTotalBookings(totalBookings.size());
+
+        return bookingInfomation;
+
+    }
+
+    @WebMethod
+    public Order[] getAllOrders(){
+        DBUtil db= DBUtil.getSingletonInstance();
+        ArrayList<Order> orders= db.getAllOrders(false);
+        return orders.toArray(new Order[0]);
+    }
+
 }
