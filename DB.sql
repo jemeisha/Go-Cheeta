@@ -183,7 +183,7 @@ INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) 
 -- Admin Panel pages---
 
 -- Manage Drivers
--- Manage Branches
+-- Manage Branches--- view
 -- Sales details
 -- Customer Feedback
 -- Manage bookings

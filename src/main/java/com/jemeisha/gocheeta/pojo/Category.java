@@ -1,5 +1,8 @@
 package com.jemeisha.gocheeta.pojo;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="Category")
 public class Category {
 
     private int categoryId;

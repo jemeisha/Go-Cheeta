@@ -1,5 +1,8 @@
 package com.jemeisha.gocheeta.pojo;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="Branch")
 public class Branch {
     private int branchId;
     private String branchName;

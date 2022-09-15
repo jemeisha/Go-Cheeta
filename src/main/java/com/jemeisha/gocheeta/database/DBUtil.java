@@ -683,6 +683,30 @@ public class DBUtil {
         return orderList;
     }
 
+    public ArrayList<Branch> getAllBranches() {
+        ArrayList<Branch> branchList = new ArrayList<>();
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement statement = conn.createStatement();
+
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `branch`");
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                Branch branch = new Branch();
+
+                branch.setBranchId(resultSet.getInt("branch_id"));
+                branch.setBranchName(resultSet.getString("branch_name"));
+                branch.setPhoneNo(resultSet.getString("phoneNo"));
+
+                branchList.add(branch);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return branchList;
+    }
+
     //getCustomerByUsername
     //createCustomer
     //getAllCustomers
