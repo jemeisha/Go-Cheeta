@@ -707,6 +707,66 @@ public class DBUtil {
         return branchList;
     }
 
+    public Branch getBranchById(int branchId) {
+
+        Branch branch = new Branch();
+        boolean branchFound = false;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `branch` WHERE branch_id=?");
+            ps.setInt(1, branchId);
+            ResultSet rs = ps.executeQuery();
+
+            branchFound = rs.next();
+            if (branchFound) {
+                branch.setBranchId(rs.getInt("branch_id"));
+                branch.setBranchName(rs.getString("branch_name"));
+                branch.setPhoneNo(rs.getString("phoneNo"));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        if (branchFound) {
+            return branch;
+        } else {
+            return null;
+
+        }
+
+    }
+
+
+    public Category getCategoryById(int categoryId) {
+
+        Category category = new Category();
+        boolean categoryFound = false;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM `category` WHERE category_id=?");
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+
+            categoryFound = rs.next();
+            if (categoryFound) {
+                category.setCategoryId(rs.getInt("category_id"));
+                category.setName(rs.getString("name"));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        if (categoryFound) {
+            return category;
+        } else {
+            return null;
+
+        }
+
+    }
+
     //getCustomerByUsername
     //createCustomer
     //getAllCustomers

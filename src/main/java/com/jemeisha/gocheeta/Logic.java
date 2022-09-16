@@ -50,7 +50,6 @@ public class Logic {
 
     @WebMethod
     public String login(String username, String password) throws NoSuchAlgorithmException {
-
         DBUtil db = DBUtil.getSingletonInstance();
         Customer customer = db.getCustomerByUsername(username);
 
@@ -75,10 +74,14 @@ public class Logic {
         DBUtil db = DBUtil.getSingletonInstance();
         int dId = Integer.parseInt(driverId);
         Driver driver = db.getDriverById(dId);
-
+//        System.out.println("driver test - "+driver);
         if (driver != null) {
             String newPassword = Util.hashMD5(password);
+//            System.out.println("new test - "+newPassword);
+//            System.out.println("pass test - "+driver.getPassword());
+
             if (newPassword.equals(driver.getPassword())) {
+                System.out.println("1");
                 String jwt = Util.signJWT(driverId, DRIVER_AUDIENCE);
                 return jwt;
             } else {
@@ -108,7 +111,7 @@ public class Logic {
     }
 
     @WebMethod
-    public Order bookARide(String username, int startingLocation, int endingLocation) throws Exception{
+    public Order bookARide(String username, int startingLocation, int endingLocation) throws Exception {
 
         DBUtil db = DBUtil.getSingletonInstance();
 
@@ -125,7 +128,7 @@ public class Logic {
                 }
                 double total = Util.calculatePrice(distance);
                 Driver driver = availableDrivers.get(0);
-                String vehicleNo = db.getVehicleByDriverId(driver.getDriverId()).getVehicleNo();
+                String vehicleNo = driver.getVehicleNo();
                 int orderID = db.createOrder(username, vehicleNo, driver.getDriverId(), startingLocation, endingLocation, total, 0);
 
                 Order order = new Order();
@@ -183,7 +186,7 @@ public class Logic {
 
         DecodedJWT decodedJWT = Util.verifyToken(jwt, CUSTOMER_AUDIENCE);
         if (decodedJWT != null) {
-            DBUtil db=DBUtil.getSingletonInstance();
+            DBUtil db = DBUtil.getSingletonInstance();
             return db.getCustomerByUsername(decodedJWT.getSubject());
         } else {
             return null;
@@ -277,5 +280,81 @@ public class Logic {
         DBUtil db = DBUtil.getSingletonInstance();
         ArrayList<Category> categories = db.getAllCategories();
         return categories.toArray(new Category[0]);
+    }
+
+    @WebMethod
+    public Order getCustomerOngoingBooking(String username) {
+        DBUtil db = DBUtil.getSingletonInstance();
+        Order o = db.getOrdersByUsername(username, true).get(0);
+        o.loadDriver();
+        o.getDriver().loadVehicle();
+        o.getDriver().getVehicle().loadCategory();
+        return o;
+    }
+    @WebMethod
+    public Order[] getCustomerOrderHistory(String username){
+        DBUtil db = DBUtil.getSingletonInstance();
+        Order[] os = db.getOrdersByUsername(username, false).toArray(new Order[0]);
+        ArrayList<Order> filtered = new ArrayList<>();
+        for(int x=0;x<os.length;x++){
+            Order o = os[x];
+            if(o.getBookingState() ==3){
+                o.loadDriver();
+                o.getDriver().loadVehicle();
+                o.getDriver().getVehicle().loadCategory();
+                filtered.add(o);
+            }
+        }
+        return filtered.toArray(new Order[0]);
+    }
+
+    @WebMethod
+    public Branch getBranchById(int branchId) {
+        DBUtil db = DBUtil.getSingletonInstance();
+        return db.getBranchById(branchId);
+    }
+
+    @WebMethod
+    public Order getDriverOngoingBooking(String driverId) {
+        DBUtil db = DBUtil.getSingletonInstance();
+        Order o = db.getOrdersByDriverId(Integer.parseInt(driverId), true).get(0);
+        o.loadDriver();
+        o.loadCustomer();
+        o.getDriver().loadVehicle();
+        o.getDriver().getVehicle().loadCategory();
+        return o;
+    }
+    @WebMethod
+    public Order[] getDriverOrderHistory(String driverId){
+        DBUtil db = DBUtil.getSingletonInstance();
+        Order[] os = db.getOrdersByDriverId(Integer.parseInt(driverId), false).toArray(new Order[0]);
+        ArrayList<Order> filtered = new ArrayList<>();
+        for(int x=0;x<os.length;x++){
+            Order o = os[x];
+            if(o.getBookingState() ==3){
+                o.loadDriver();
+                o.loadCustomer();
+                o.getDriver().loadVehicle();
+                o.getDriver().getVehicle().loadCategory();
+                filtered.add(o);
+            }
+        }
+        return filtered.toArray(new Order[0]);
+    }
+
+
+    @WebMethod
+    public Driver getLoggedInDriver(String jwt) {
+        DBUtil db = DBUtil.getSingletonInstance();
+        return db.getDriverById(1);
+//        DecodedJWT decodedJWT = Util.verifyToken(jwt, DRIVER_AUDIENCE);
+//        if (decodedJWT != null) {
+//            DBUtil db = DBUtil.getSingletonInstance();
+//            return db.getDriverById(decodedJWT.getSubject());
+//        } else {
+//            return null;
+//        }
+        //return decodedJWT!=null; --------samething as if
+
     }
 }

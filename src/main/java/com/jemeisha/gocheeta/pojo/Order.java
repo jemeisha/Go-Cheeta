@@ -1,5 +1,7 @@
 package com.jemeisha.gocheeta.pojo;
 
+import com.jemeisha.gocheeta.database.DBUtil;
+
 public class Order {
     private int orderID;
     private String username;
@@ -9,6 +11,25 @@ public class Order {
     private int destination;
     private double total;
     private int bookingState;
+    private Driver driver;
+
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
 
     public int getOrderID() {
         return orderID;
@@ -72,5 +93,14 @@ public class Order {
 
     public void setBookingState(int bookingState) {
         this.bookingState = bookingState;
+    }
+
+    public void loadDriver(){
+        DBUtil db= DBUtil.getSingletonInstance();
+        this.driver = db.getDriverById(this.driverID);
+    }
+    public void loadCustomer(){
+        DBUtil db= DBUtil.getSingletonInstance();
+        this.customer = db.getCustomerByUsername(this.username);
     }
 }

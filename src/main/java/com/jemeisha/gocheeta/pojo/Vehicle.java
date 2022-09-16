@@ -1,5 +1,7 @@
 package com.jemeisha.gocheeta.pojo;
 
+import com.jemeisha.gocheeta.database.DBUtil;
+
 public class Vehicle {
 
     private String vehicleNo;
@@ -7,7 +9,15 @@ public class Vehicle {
     private int vehicleType;
     private int noOfSeats;
     private String vehicleColour;
+    private Category category;
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 //    public int getDriverId() {
 //        return driverId;
 //    }
@@ -46,5 +56,9 @@ public class Vehicle {
 
     public void setVehicleColour(String vehicleColour) {
         this.vehicleColour = vehicleColour;
+    }
+
+    public void loadCategory(){
+        this.category = DBUtil.getSingletonInstance().getCategoryById(this.vehicleType);
     }
 }
