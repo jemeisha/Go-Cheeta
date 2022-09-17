@@ -188,3 +188,12 @@ INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) 
 -- Customer Feedback
 -- Manage bookings
 -- Manage customers
+
+
+
+-----Admin panel remaining functions
+
+--Create driver
+--update driver
+--delete driver
+--sales details page

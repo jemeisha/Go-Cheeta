@@ -69,6 +69,9 @@ public class DBUtil {
             if (customerFound) {
                 customer.setUsername(rs.getString("username"));
                 customer.setPassword(rs.getString("password"));
+                customer.setCusFistName(rs.getString("first_name"));
+                customer.setCusLastName(rs.getString("last_name"));
+                customer.setCusMobNo(rs.getString("mobile_no"));
             }
 
         } catch (Exception e) {

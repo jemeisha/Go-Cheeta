@@ -107,7 +107,6 @@ public class Logic {
         } else {
             return null;
         }
-
     }
 
     @WebMethod
@@ -152,20 +151,17 @@ public class Logic {
 
     }
 
-    public static boolean changeOrderStatus(int orderId, int state) throws SQLException, ClassNotFoundException, OrderCannotBeFound {
+    @WebMethod
+    public boolean changeOrderStatus(int orderId, int state) throws Exception {
         DBUtil db = DBUtil.getSingletonInstance();
         Order order = db.getOrderByOrderId(orderId);
 
         if (order != null) {
             return db.updateOrderStatusById(orderId, state);
-
         } else {
             //order does not exist.Throw error
             throw new OrderCannotBeFound();
-
         }
-
-
     }
 
     @WebMethod
@@ -225,6 +221,11 @@ public class Logic {
     public Driver[] getAllDrivers() {
         DBUtil db = DBUtil.getSingletonInstance();
         ArrayList<Driver> drivers = db.getAllDrivers();
+        for(int x=0;x<drivers.size();x++){
+            Driver d = drivers.get(x);
+            d.loadVehicle();
+            d.getVehicle().loadCategory();
+        }
         return drivers.toArray(new Driver[0]);
     }
 
@@ -236,6 +237,7 @@ public class Logic {
 
             Driver d = drivers.get(x);
             d.loadVehicle();
+            d.getVehicle().loadCategory();
         }
         return drivers.toArray(new Driver[0]);
     }
@@ -265,6 +267,13 @@ public class Logic {
     public Order[] getAllOrders() {
         DBUtil db = DBUtil.getSingletonInstance();
         ArrayList<Order> orders = db.getAllOrders(false);
+        for(int x=0;x<orders.size();x++){
+            Order o = orders.get(x);
+            o.loadDriver();
+            o.loadBranches();
+            o.getDriver().loadVehicle();
+            o.getDriver().getVehicle().loadCategory();
+        }
         return orders.toArray(new Order[0]);
     }
 
@@ -285,21 +294,28 @@ public class Logic {
     @WebMethod
     public Order getCustomerOngoingBooking(String username) {
         DBUtil db = DBUtil.getSingletonInstance();
-        Order o = db.getOrdersByUsername(username, true).get(0);
+        ArrayList<Order> os = db.getOrdersByUsername(username, true);
+        if(os.size() == 0){
+            return null;
+        }
+        Order o = os.get(0);
         o.loadDriver();
+        o.loadBranches();
         o.getDriver().loadVehicle();
         o.getDriver().getVehicle().loadCategory();
         return o;
     }
+
     @WebMethod
-    public Order[] getCustomerOrderHistory(String username){
+    public Order[] getCustomerOrderHistory(String username) {
         DBUtil db = DBUtil.getSingletonInstance();
         Order[] os = db.getOrdersByUsername(username, false).toArray(new Order[0]);
         ArrayList<Order> filtered = new ArrayList<>();
-        for(int x=0;x<os.length;x++){
+        for (int x = 0; x < os.length; x++) {
             Order o = os[x];
-            if(o.getBookingState() ==3){
+            if (o.getBookingState() == 3) {
                 o.loadDriver();
+                o.loadBranches();
                 o.getDriver().loadVehicle();
                 o.getDriver().getVehicle().loadCategory();
                 filtered.add(o);
@@ -317,22 +333,29 @@ public class Logic {
     @WebMethod
     public Order getDriverOngoingBooking(String driverId) {
         DBUtil db = DBUtil.getSingletonInstance();
-        Order o = db.getOrdersByDriverId(Integer.parseInt(driverId), true).get(0);
+        ArrayList<Order> os = db.getOrdersByDriverId(Integer.parseInt(driverId), true);
+        if(os.size()==0){
+            return null;
+        }
+        Order o = os.get(0);
         o.loadDriver();
+        o.loadBranches();
         o.loadCustomer();
         o.getDriver().loadVehicle();
         o.getDriver().getVehicle().loadCategory();
         return o;
     }
+
     @WebMethod
-    public Order[] getDriverOrderHistory(String driverId){
+    public Order[] getDriverOrderHistory(String driverId) {
         DBUtil db = DBUtil.getSingletonInstance();
         Order[] os = db.getOrdersByDriverId(Integer.parseInt(driverId), false).toArray(new Order[0]);
         ArrayList<Order> filtered = new ArrayList<>();
-        for(int x=0;x<os.length;x++){
+        for (int x = 0; x < os.length; x++) {
             Order o = os[x];
-            if(o.getBookingState() ==3){
+            if (o.getBookingState() == 3) {
                 o.loadDriver();
+                o.loadBranches();
                 o.loadCustomer();
                 o.getDriver().loadVehicle();
                 o.getDriver().getVehicle().loadCategory();
@@ -356,5 +379,23 @@ public class Logic {
 //        }
         //return decodedJWT!=null; --------samething as if
 
+    }
+    @WebMethod
+    public double getTotalSalesInfo(){
+        return DBUtil.getSingletonInstance().getTotalSales();
+    }
+    @WebMethod
+    public SalesInfo[] getTotalSalesByBranch(){
+        DBUtil db = DBUtil.getSingletonInstance();
+        ArrayList<Branch> branches = db.getBranches();
+        ArrayList<SalesInfo> branchSales = new ArrayList<>() ;
+        for(int x=0;x<branches.size();x++){
+            Branch b = branches.get(x);
+            SalesInfo si = new SalesInfo();
+            si.setBranchName(b.getBranchName());
+            si.setSales(db.getSalesByBranch(b.getBranchId()));
+            branchSales.add(si);
+        }
+        return branchSales.toArray(new SalesInfo[0]);
     }
 }

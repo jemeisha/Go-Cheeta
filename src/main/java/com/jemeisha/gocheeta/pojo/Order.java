@@ -15,6 +15,9 @@ public class Order {
 
     private Customer customer;
 
+    private Branch pickupObj;
+    private Branch destinationObj;
+
     public Customer getCustomer() {
         return customer;
     }
@@ -102,5 +105,27 @@ public class Order {
     public void loadCustomer(){
         DBUtil db= DBUtil.getSingletonInstance();
         this.customer = db.getCustomerByUsername(this.username);
+    }
+
+    public Branch getPickupObj() {
+        return pickupObj;
+    }
+
+    public void setPickupObj(Branch pickupObj) {
+        this.pickupObj = pickupObj;
+    }
+
+    public Branch getDestinationObj() {
+        return destinationObj;
+    }
+
+    public void setDestinationObj(Branch destinationObj) {
+        this.destinationObj = destinationObj;
+    }
+
+    public void loadBranches(){
+        DBUtil db= DBUtil.getSingletonInstance();
+        this.pickupObj = db.getBranchById(this.pickup);
+        this.destinationObj = db.getBranchById(this.destination);
     }
 }
