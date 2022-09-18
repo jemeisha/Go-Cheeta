@@ -225,6 +225,38 @@ public class DBUtil {
         return driverList;
 
     }
+
+    public boolean createDriver(
+            String pass,
+            String fname,
+            String lname,
+            String nic,
+            String mobno,
+            String branchId,
+            String vno
+
+
+    ) {
+        int rowsAffected = 0;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO `driver`(`password`,`first_name`,`last_name`,`NIC`,`mobile`,`branch_id`,`vehicle_no`) VALUES (?,?,?,?,?,?,?)");
+            ps.setString(1, pass);
+            ps.setString(2, fname);
+            ps.setString(3, lname);
+            ps.setString(4, nic);
+            ps.setString(5, mobno);
+            ps.setString(6, branchId);
+            ps.setString(7, vno);
+            rowsAffected = ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return rowsAffected > 0;
+
+
+    }
     public Vehicle getVehicleById(String vehicleId) {
 
         Vehicle vehicle = new Vehicle();
@@ -295,13 +327,13 @@ public class DBUtil {
         try {
             Class.forName(CLASS_NAME);
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO `vehicle` VALUES (?,?,?,?,?)");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO `vehicle` VALUES (?,?,?,?)");
 
             ps.setString(1, vehicleNo);
             //ps.setString(2, driverId);
-            ps.setString(3, vehicleType);
-            ps.setInt(4, noOfSeats);
-            ps.setString(5, vehicleColour);
+            ps.setString(2, vehicleType);
+            ps.setInt(3, noOfSeats);
+            ps.setString(4, vehicleColour);
             rowsAffected = ps.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);

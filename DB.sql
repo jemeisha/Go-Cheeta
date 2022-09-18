@@ -24,8 +24,8 @@ CREATE TABLE `category`
     `category_id`   int         NOT NULL AUTO_INCREMENT,
     `name` varchar(45) NOT NULL,
     PRIMARY KEY (`category_id`)
-    
-    
+
+
 );
 CREATE TABLE `vehicle`
 (
@@ -35,13 +35,13 @@ CREATE TABLE `vehicle`
     `noOfSeats`    int DEFAULT NULL,
     `colour`       varchar(45) NOT NULL,
     PRIMARY KEY (`vehicle_no`),
-   --  KEY            `vehi_driver_idx` (`driver_id`),
+    --  KEY            `vehi_driver_idx` (`driver_id`),
 --     CONSTRAINT `vehi_driver` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT `vehicle_category` FOREIGN KEY (`vehicle_category`) REFERENCES `category` (`category_id`)
 );
 CREATE TABLE `driver`
 (
-    `driver_id`  int         NOT NULL,
+    `driver_id`  int         NOT NULL AUTO_INCREMENT,
     `password`   varchar(45) NOT NULL,
     `first_name` varchar(45) NOT NULL,
     `last_name`  varchar(45) DEFAULT NULL,
@@ -75,20 +75,20 @@ CREATE TABLE `order`
     CONSTRAINT `branch_pickup` FOREIGN KEY (`pickup`) REFERENCES `branch` (`branch_id`),
     CONSTRAINT `branch_destination` FOREIGN KEY (`destination`) REFERENCES `branch` (`branch_id`),
     CONSTRAINT `order_driver` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`));
-    
-   
-   CREATE TABLE `distance`
-   (
-   `distance_one` int NOT NULL,
-   `distance_two` int NOT NULL,
-   `distance` double NOT NULL,
-   
-PRIMARY KEY (`distance_one`,`distance_two`),
-CONSTRAINT `distanceonebranch` FOREIGN KEY (`distance_one`) REFERENCES `branch` (`branch_id`),
-CONSTRAINT `distancetwobranch` FOREIGN KEY (`distance_two`) REFERENCES `branch` (`branch_id`));
 
-   
-    -- ------------Insert statement------------------------
+
+CREATE TABLE `distance`
+(
+    `distance_one` int NOT NULL,
+    `distance_two` int NOT NULL,
+    `distance` double NOT NULL,
+
+    PRIMARY KEY (`distance_one`,`distance_two`),
+    CONSTRAINT `distanceonebranch` FOREIGN KEY (`distance_one`) REFERENCES `branch` (`branch_id`),
+    CONSTRAINT `distancetwobranch` FOREIGN KEY (`distance_two`) REFERENCES `branch` (`branch_id`));
+
+
+-- ------------Insert statement------------------------
 
 INSERT INTO `branch` (`branch_id`,`branch_name`,`phoneNo`)
 VALUES (1,'Nugegoda','0112454599');
@@ -178,22 +178,5 @@ INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) 
 INSERT INTO `go_cheeta`.`distance` (`distance_one`, `distance_two`, `distance`) VALUES ('5', '6', '301.6');
 
 
--- SELECT * FROM go_cheeta.driver WHERE branch_id=1 AND driver_id NOT IN (SELECT driver_id FROM `order` WHERE booking_state <=2 );
-
--- Admin Panel pages---
-
--- Manage Drivers
--- Manage Branches--- view
--- Sales details
--- Customer Feedback
--- Manage bookings
--- Manage customers
 
 
-
------Admin panel remaining functions
-
---Create driver
---update driver
---delete driver
---sales details page

@@ -398,4 +398,51 @@ public class Logic {
         }
         return branchSales.toArray(new SalesInfo[0]);
     }
+
+    @WebMethod
+    public Vehicle registerDriver(String fname,String lname,String nic,String mobno, String pass,String branchId,String vno,String vCatId,String noseats,String colour) throws NoSuchAlgorithmException {
+
+        String md5Password = Util.hashMD5(pass);
+
+        DBUtil db = DBUtil.getSingletonInstance();
+
+        Vehicle v = new Vehicle();
+        Driver d = new Driver();
+
+        d.setDriverFirstName(fname);
+        d.setDriverLastName(lname);
+        d.setDriverNic(nic);
+        d.setDriverMobile(mobno);
+//        d.setPassword(pass);
+        d.setBranchId(Integer.parseInt(branchId));
+        d.setVehicleNo(vno);
+
+        v.setVehicleType(Integer.parseInt(vCatId));
+        v.setNoOfSeats(Integer.parseInt(noseats));
+        v.setVehicleColour(colour);
+
+        db.createVehicle(vno,vCatId,Integer.parseInt(noseats),colour);
+        db.createDriver(md5Password,fname,lname,nic,mobno,branchId,vno);
+
+        return v;
+
+    }
+
+    @WebMethod
+    public Driver getDriverbyId(int driverId) {
+        DBUtil db = DBUtil.getSingletonInstance();
+        Driver d= db.getDriverById(driverId);
+        d.loadVehicle();
+        d.getVehicle().loadCategory();
+        return d;
+//        DecodedJWT decodedJWT = Util.verifyToken(jwt, DRIVER_AUDIENCE);
+//        if (decodedJWT != null) {
+//            DBUtil db = DBUtil.getSingletonInstance();
+//            return db.getDriverById(decodedJWT.getSubject());
+//        } else {
+//            return null;
+//        }
+        //return decodedJWT!=null; --------samething as if
+
+    }
 }
