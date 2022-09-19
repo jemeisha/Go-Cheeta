@@ -21,6 +21,7 @@ public class Logic {
     public final String CUSTOMER_AUDIENCE = "customer";
     public final String ADMIN_AUDIENCE = "admin";
     public final String DRIVER_AUDIENCE = "driver";
+    public final double SAME_CITY_PRICE = 200;
 
     @WebMethod
 //    @WebResult(targetNamespace = "go_cheeta")
@@ -121,11 +122,17 @@ public class Logic {
         } else {
             ArrayList<Driver> availableDrivers = db.getAvailableDrivers(startingLocation);
             if (availableDrivers.size() > 0) {
-                double distance = db.getDistance(startingLocation, endingLocation);
-                if (distance < 0) {
-                    throw new DistanceNotFound();
+                double total = 0;
+                if (startingLocation == endingLocation) {
+                    total = SAME_CITY_PRICE;
+                }else{
+                    double distance = db.getDistance(startingLocation, endingLocation);
+                    if (distance < 0) {
+                        throw new DistanceNotFound();
+                    }
+                    total = Util.calculatePrice(distance);
                 }
-                double total = Util.calculatePrice(distance);
+
                 Driver driver = availableDrivers.get(0);
                 String vehicleNo = driver.getVehicleNo();
                 int orderID = db.createOrder(username, vehicleNo, driver.getDriverId(), startingLocation, endingLocation, total, 0);
@@ -221,7 +228,7 @@ public class Logic {
     public Driver[] getAllDrivers() {
         DBUtil db = DBUtil.getSingletonInstance();
         ArrayList<Driver> drivers = db.getAllDrivers();
-        for(int x=0;x<drivers.size();x++){
+        for (int x = 0; x < drivers.size(); x++) {
             Driver d = drivers.get(x);
             d.loadVehicle();
             d.getVehicle().loadCategory();
@@ -267,7 +274,7 @@ public class Logic {
     public Order[] getAllOrders() {
         DBUtil db = DBUtil.getSingletonInstance();
         ArrayList<Order> orders = db.getAllOrders(false);
-        for(int x=0;x<orders.size();x++){
+        for (int x = 0; x < orders.size(); x++) {
             Order o = orders.get(x);
             o.loadDriver();
             o.loadBranches();
@@ -295,7 +302,7 @@ public class Logic {
     public Order getCustomerOngoingBooking(String username) {
         DBUtil db = DBUtil.getSingletonInstance();
         ArrayList<Order> os = db.getOrdersByUsername(username, true);
-        if(os.size() == 0){
+        if (os.size() == 0) {
             return null;
         }
         Order o = os.get(0);
@@ -334,7 +341,7 @@ public class Logic {
     public Order getDriverOngoingBooking(String driverId) {
         DBUtil db = DBUtil.getSingletonInstance();
         ArrayList<Order> os = db.getOrdersByDriverId(Integer.parseInt(driverId), true);
-        if(os.size()==0){
+        if (os.size() == 0) {
             return null;
         }
         Order o = os.get(0);
@@ -369,27 +376,28 @@ public class Logic {
     @WebMethod
     public Driver getLoggedInDriver(String jwt) {
         DBUtil db = DBUtil.getSingletonInstance();
-        return db.getDriverById(1);
-//        DecodedJWT decodedJWT = Util.verifyToken(jwt, DRIVER_AUDIENCE);
-//        if (decodedJWT != null) {
-//            DBUtil db = DBUtil.getSingletonInstance();
-//            return db.getDriverById(decodedJWT.getSubject());
-//        } else {
-//            return null;
-//        }
+//        return db.getDriverById(1);
+        DecodedJWT decodedJWT = Util.verifyToken(jwt, DRIVER_AUDIENCE);
+        if (decodedJWT != null) {
+            return db.getDriverById(Integer.parseInt(decodedJWT.getSubject()));
+        } else {
+            return null;
+        }
         //return decodedJWT!=null; --------samething as if
 
     }
+
     @WebMethod
-    public double getTotalSalesInfo(){
+    public double getTotalSalesInfo() {
         return DBUtil.getSingletonInstance().getTotalSales();
     }
+
     @WebMethod
-    public SalesInfo[] getTotalSalesByBranch(){
+    public SalesInfo[] getTotalSalesByBranch() {
         DBUtil db = DBUtil.getSingletonInstance();
         ArrayList<Branch> branches = db.getBranches();
-        ArrayList<SalesInfo> branchSales = new ArrayList<>() ;
-        for(int x=0;x<branches.size();x++){
+        ArrayList<SalesInfo> branchSales = new ArrayList<>();
+        for (int x = 0; x < branches.size(); x++) {
             Branch b = branches.get(x);
             SalesInfo si = new SalesInfo();
             si.setBranchName(b.getBranchName());
@@ -400,7 +408,7 @@ public class Logic {
     }
 
     @WebMethod
-    public Vehicle registerDriver(String fname,String lname,String nic,String mobno, String pass,String branchId,String vno,String vCatId,String noseats,String colour) throws NoSuchAlgorithmException {
+    public Vehicle registerDriver(String fname, String lname, String nic, String mobno, String pass, String branchId, String vno, String vCatId, String noseats, String colour) throws NoSuchAlgorithmException {
 
         String md5Password = Util.hashMD5(pass);
 
@@ -421,8 +429,8 @@ public class Logic {
         v.setNoOfSeats(Integer.parseInt(noseats));
         v.setVehicleColour(colour);
 
-        db.createVehicle(vno,vCatId,Integer.parseInt(noseats),colour);
-        db.createDriver(md5Password,fname,lname,nic,mobno,branchId,vno);
+        db.createVehicle(vno, vCatId, Integer.parseInt(noseats), colour);
+        db.createDriver(md5Password, fname, lname, nic, mobno, branchId, vno);
 
         return v;
 
@@ -431,7 +439,7 @@ public class Logic {
     @WebMethod
     public Driver getDriverbyId(int driverId) {
         DBUtil db = DBUtil.getSingletonInstance();
-        Driver d= db.getDriverById(driverId);
+        Driver d = db.getDriverById(driverId);
         d.loadVehicle();
         d.getVehicle().loadCategory();
         return d;
@@ -443,6 +451,53 @@ public class Logic {
 //            return null;
 //        }
         //return decodedJWT!=null; --------samething as if
+    }
 
+    @WebMethod
+    public boolean updateDriver(String oldVehicleNo, String driverId, String fname, String lname, String nic, String mobno, String pass, String branchId, String vno, String vCatId, String noseats, String colour) throws Exception {
+
+        String md5Password = Util.hashMD5(pass);
+        DBUtil db = DBUtil.getSingletonInstance();
+
+        Vehicle v = new Vehicle();
+        Driver d = new Driver();
+
+        d.setDriverFirstName(fname);
+        d.setDriverLastName(lname);
+        d.setDriverNic(nic);
+        d.setDriverMobile(mobno);
+//        d.setPassword(pass);
+        d.setBranchId(Integer.parseInt(branchId));
+        d.setVehicleNo(vno);
+
+        v.setVehicleType(Integer.parseInt(vCatId));
+        v.setNoOfSeats(Integer.parseInt(noseats));
+        v.setVehicleColour(colour);
+
+        boolean vehicleUpdated = db.updateVehicle(vno, Integer.parseInt(vCatId), Integer.parseInt(noseats), colour, oldVehicleNo);
+        if (!vehicleUpdated) {
+            throw new Exception("Unable to update vehicle");
+        }
+        boolean driverUpdated = db.updateDriver(md5Password, fname, lname, nic, mobno, vno, Integer.parseInt(driverId));
+        if (!driverUpdated) {
+            throw new Exception("Unable to update driver");
+        }
+
+        return true;
+    }
+    @WebMethod
+    public double getTripPricing(int pickup, int dest) throws Exception{
+        DBUtil db = DBUtil.getSingletonInstance();
+        double total = 0;
+        if(pickup == dest){
+            total = SAME_CITY_PRICE;
+        }else{
+            double distance = db.getDistance(pickup, dest);
+            if (distance < 0) {
+                throw new DistanceNotFound();
+            }
+            total = Util.calculatePrice(distance);
+        }
+        return total;
     }
 }

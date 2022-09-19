@@ -802,6 +802,64 @@ public class DBUtil {
 
     }
 
+    public boolean updateDriver(String password,String firstName,String lastName,String nic, String mobile,String vehicleno,int driverId) throws SQLException, ClassNotFoundException {
+
+        int rowsAffected = 0;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("UPDATE `driver` SET `password`=?,`first_name`=?,`last_name`=?,`NIC`=?,`mobile`=?,`vehicle_no`=? WHERE driver_id=?");
+
+            ps.setString(1, password);
+            ps.setString(2, firstName);
+            ps.setString(3, lastName);
+            ps.setString(4, nic);
+            ps.setString(5, mobile);
+            ps.setString(6, vehicleno);
+            ps.setInt(7, driverId);
+
+
+            rowsAffected = ps.executeUpdate();
+            //get the auto generated id
+            return rowsAffected>0;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+
+
+
+    }
+
+    public boolean updateVehicle(String vehicleno,int category,int noOfSeats,String colour,String oldVehicleNo) throws SQLException, ClassNotFoundException {
+
+        int rowsAffected = 0;
+        try {
+            Class.forName(CLASS_NAME);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            PreparedStatement ps = conn.prepareStatement("UPDATE `vehicle` SET `vehicle_no`=?,`vehicle_category`=?,`noOfSeats`=?,`colour`=? WHERE vehicle_no=?");
+
+            ps.setString(1, vehicleno);
+            ps.setInt(2, category);
+            ps.setInt(3, noOfSeats);
+            ps.setString(4, colour);
+            ps.setString(5, oldVehicleNo);
+
+
+            rowsAffected = ps.executeUpdate();
+            //get the auto generated id
+            return rowsAffected>0;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+
+
+
+    }
+
     //getCustomerByUsername
     //createCustomer
     //getAllCustomers
