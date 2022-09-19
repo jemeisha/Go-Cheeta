@@ -2,6 +2,7 @@ package gocheeta;
 
 import com.jemeisha.gocheeta.database.DBUtil;
 import com.jemeisha.gocheeta.pojo.Customer;
+import com.jemeisha.gocheeta.pojo.Driver;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,9 +29,15 @@ public class DBUtilTest {
     }
 
     @Test
-
     public void testGetAllCustomers() {
         ArrayList<Customer> list = db.getAllCustomers();
-        assertNotEquals();
+        assertNotEquals(0,list.size());
     }
+
+    @Test
+    public void getAllDriversTest(){
+        ArrayList<Driver> list = db.getAllDrivers();
+        assertNotEquals(0,list.size());
+    }
+
 }
