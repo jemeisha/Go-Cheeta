@@ -105,19 +105,19 @@ VALUES (6, 'Jaffna', '0112775461');
 
 
 INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `mobile_no`)
-VALUES ('king', 'king123', 'Kingsley', 'Almeida', '0722893708');
+VALUES ('king', 'b59c67bf196a4758191e42f76670ceba', 'Kingsley', 'Almeida', '0722893708');
 INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `mobile_no`)
-VALUES ('helen', 'helen123', 'Helen', 'Fonseka', '0755625183');
+VALUES ('helen', 'b59c67bf196a4758191e42f76670ceba', 'Helen', 'Fonseka', '0755625183');
 INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `mobile_no`)
-VALUES ('ruks', 'rukshi123', 'Rukshi', 'Withana', '0772729729');
+VALUES ('ruks', 'b59c67bf196a4758191e42f76670ceba', 'Rukshi', 'Withana', '0772729729');
 INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `mobile_no`)
-VALUES ('nils', 'nilu123', 'Niluni', 'Fernela', '0762345123');
+VALUES ('nils', 'b59c67bf196a4758191e42f76670ceba', 'Niluni', 'Fernela', '0762345123');
 INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `mobile_no`)
-VALUES ('thara', 'tharaka123', 'Tharaka', 'Perera', '0753476567');
+VALUES ('thara', 'b59c67bf196a4758191e42f76670ceba', 'Tharaka', 'Perera', '0753476567');
 INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `mobile_no`)
-VALUES ('dumindu', 'dumi123', 'Dumindu', 'Niranga', '0727856154');
+VALUES ('dumindu', 'b59c67bf196a4758191e42f76670ceba', 'Dumindu', 'Niranga', '0727856154');
 INSERT INTO `customer` (`username`, `password`, `first_name`, `last_name`, `mobile_no`)
-VALUES ('hirusha', 'hirusha123', 'Hirusha', 'Thishan', '0777567234');
+VALUES ('hirusha', 'b59c67bf196a4758191e42f76670ceba', 'Hirusha', 'Thishan', '0777567234');
 
 
 INSERT INTO `category`  VALUES (1,'Car');
@@ -140,13 +140,13 @@ INSERT INTO `vehicle` (`vehicle_no`,`vehicle_category`,`noOfSeats`,`colour`) VAL
 -- INSERT INTO `driver`  VALUES (6,'2f7b52aacfbf6f44e13d27656ecb1f59','Suneth','Perera','804022865V','0765566234',3);
 -- INSERT INTO `driver`  VALUES (7,'2f7b52aacfbf6f44e13d27656ecb1f59','Kamal','Fernando','852055234V','0756070890',3);
 
-INSERT INTO `driver`  VALUES (1,'2f7b52aacfbf6f44e13d27656ecb1f59','Thilak','Perera','645078526V','0764567123',1,'2524847');
-INSERT INTO `driver`  VALUES (2,'2f7b52aacfbf6f44e13d27656ecb1f59','Jagath','Fernando','724010586V','0757033546',1,'AAB6032');
-INSERT INTO `driver`  VALUES (3,'2f7b52aacfbf6f44e13d27656ecb1f59','Nevil','Almeida','683010488V','0727834567',1,'BAA3357');
-INSERT INTO `driver`  VALUES (4,'2f7b52aacfbf6f44e13d27656ecb1f59','Harry','Silva','703820333V','0777876702',2,'BBC5678');
-INSERT INTO `driver`  VALUES (5,'2f7b52aacfbf6f44e13d27656ecb1f59','Vimal','De Silva','759030543V','0719080633',4,'CAP7880');
-INSERT INTO `driver`  VALUES (6,'2f7b52aacfbf6f44e13d27656ecb1f59','Suneth','Perera','804022865V','0765566234',3,'CAS3922');
-INSERT INTO `driver`  VALUES (7,'2f7b52aacfbf6f44e13d27656ecb1f59','Kamal','Fernando','852055234V','0756070890',3,'PK7256');
+INSERT INTO `driver`  VALUES (1,'b59c67bf196a4758191e42f76670ceba','Thilak','Perera','645078526V','0764567123',1,'2524847');
+INSERT INTO `driver`  VALUES (2,'b59c67bf196a4758191e42f76670ceba','Jagath','Fernando','724010586V','0757033546',1,'AAB6032');
+INSERT INTO `driver`  VALUES (3,'b59c67bf196a4758191e42f76670ceba','Nevil','Almeida','683010488V','0727834567',1,'BAA3357');
+INSERT INTO `driver`  VALUES (4,'b59c67bf196a4758191e42f76670ceba','Harry','Silva','703820333V','0777876702',2,'BBC5678');
+INSERT INTO `driver`  VALUES (5,'b59c67bf196a4758191e42f76670ceba','Vimal','De Silva','759030543V','0719080633',4,'CAP7880');
+INSERT INTO `driver`  VALUES (6,'b59c67bf196a4758191e42f76670ceba','Suneth','Perera','804022865V','0765566234',3,'CAS3922');
+INSERT INTO `driver`  VALUES (7,'b59c67bf196a4758191e42f76670ceba','Kamal','Fernando','852055234V','0756070890',3,'PK7256');
 
 
 

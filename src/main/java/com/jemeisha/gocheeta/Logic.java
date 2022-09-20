@@ -500,4 +500,28 @@ public class Logic {
         }
         return total;
     }
+
+    public DriverInfomation getDriverInfomation(){
+        DriverInfomation driverInfomation= new DriverInfomation();
+        DBUtil db=DBUtil.getSingletonInstance();
+
+        ArrayList<Branch> allBranches=db.getAllBranches();
+        int availableDrivers=0;
+
+        for(int x=0;x< allBranches.size();x++){
+            Branch b=allBranches.get(x);
+            availableDrivers+=db.getAvailableDrivers(b.getBranchId()).size();
+        }
+        int totalDrivers= db.getAllDrivers().size();
+        int totalVehicles=db.getAllVehicles().size();
+
+        driverInfomation.setTotalDrivers(totalDrivers);
+        driverInfomation.setTotalVehicles(totalVehicles);
+        driverInfomation.setAvailableDrivers(availableDrivers);
+
+        return driverInfomation;
+
+
+
+    }
 }
